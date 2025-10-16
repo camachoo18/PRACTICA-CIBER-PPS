@@ -1,0 +1,23 @@
+{
+  "name": "practica-ciber-pps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camachoo18/PRACTICA-CIBER-PPS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/camachoo18/PRACTICA-CIBER-PPS/issues"
+  },
+  "homepage": "https://github.com/camachoo18/PRACTICA-CIBER-PPS#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
