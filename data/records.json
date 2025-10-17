@@ -81,14 +81,11 @@
       "imc": "23.44"
     },
     {
-      "id": 1760711772139,
-      "firstName": "Luis",
-      "lastName": "Rodríguez",
-      "birthDate": "1995-07-18",
-      "weight": 75,
-      "height": 175,
-      "date": "2024-01-15",
-      "imc": "24.49"
+      "id": 1760714930161,
+      "weight": 65,
+      "height": 165,
+      "date": "2025-10-17",
+      "imc": "0.00"
     }
   ]
 }

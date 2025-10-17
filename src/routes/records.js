@@ -19,7 +19,12 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     try {
         const { firstName, lastName, birthDate, weight, height, date } = req.body;
-        
+
+        // Validación de campos obligatorios
+        if (!firstName || !lastName || !birthDate || !weight || !height || weight <= 0 || height <= 0) {
+            return res.status(400).json({ success: false, error: 'Todos los campos son obligatorios y deben ser válidos.' });
+        }
+
         let records = { records: [] };
         try {
             const data = fs.readFileSync(DATA_FILE, 'utf8');
@@ -30,7 +35,6 @@ router.post('/', (req, res) => {
 
         // Convertir altura de cm a metros para el cálculo
         const heightInMeters = parseFloat(height) / 100;
-        
         const newRecord = {
             id: Date.now(),
             firstName: firstName.trim(),

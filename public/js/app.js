@@ -31,6 +31,16 @@ form.addEventListener('submit', async (e) => {
     const weight = parseFloat(document.getElementById('weight').value);
     const height = parseFloat(document.getElementById('height').value);
     const date = document.getElementById('date').value;
+
+    // Validación de peso y altura
+    if (isNaN(weight) || weight <= 0) {
+        alert('El peso debe ser mayor a 0');
+        return;
+    }
+    if (isNaN(height) || height <= 0) {
+        alert('La altura debe ser mayor a 0');
+        return;
+    }
     
     const imc = calculateIMC(weight, height);
     const category = getIMCCategory(parseFloat(imc));
