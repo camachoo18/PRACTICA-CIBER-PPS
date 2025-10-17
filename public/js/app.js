@@ -49,7 +49,7 @@ async function loadRecords() {
                 <div class="record-item">
                     <strong>${record.date}</strong> - 
                     Peso: ${record.weight}kg | 
-                    Altura: ${record.height}m | 
+                    Altura: ${record.height}cm | 
                     IMC: <span style="color: ${category.color}">${record.imc} (${category.category})</span>
                 </div>
             `;

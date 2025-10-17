@@ -1,6 +1,7 @@
 export function calculateIMC(weight, height) {
-    // Ahora height ya viene en metros, no necesita conversión
-    const imc = weight / (height * height);
+    // Convertir altura de centímetros a metros
+    const heightInMeters = height / 100;
+    const imc = weight / (heightInMeters * heightInMeters);
     return imc.toFixed(2);
 }
 

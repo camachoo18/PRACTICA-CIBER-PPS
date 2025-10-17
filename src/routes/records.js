@@ -28,12 +28,15 @@ router.post('/', (req, res) => {
             // Archivo no existe, usar objeto vacío
         }
 
+        // Convertir altura de cm a metros para el cálculo
+        const heightInMeters = parseFloat(height) / 100;
+        
         const newRecord = {
             id: Date.now(),
             weight: parseFloat(weight),
             height: parseFloat(height),
             date: date || new Date().toISOString().split('T')[0],
-            imc: (parseFloat(weight) / Math.pow(parseFloat(height), 2)).toFixed(2)
+            imc: (parseFloat(weight) / Math.pow(heightInMeters, 2)).toFixed(2)
         };
 
         records.records.push(newRecord);
