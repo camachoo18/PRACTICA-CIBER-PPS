@@ -81,11 +81,34 @@
       "imc": "23.44"
     },
     {
-      "id": 1760714930161,
-      "weight": 65,
-      "height": 165,
+      "id": 1760716242696,
+      "firstName": "juanito",
+      "lastName": "malasaña",
+      "birthDate": "2025-09-30",
+      "weight": 49,
+      "height": 160,
       "date": "2025-10-17",
-      "imc": "0.00"
+      "imc": "19.14"
+    },
+    {
+      "id": 1760716374149,
+      "firstName": "alejandro de la corte",
+      "lastName": "grosso",
+      "birthDate": "2025-10-17",
+      "weight": 90,
+      "height": 180,
+      "date": "2025-10-17",
+      "imc": "27.78"
+    },
+    {
+      "id": 1760716405837,
+      "firstName": "Juan",
+      "lastName": "Pérez",
+      "birthDate": "1990-01-01",
+      "weight": 70,
+      "height": 175,
+      "date": "2025-10-17",
+      "imc": "22.86"
     }
   ]
 }

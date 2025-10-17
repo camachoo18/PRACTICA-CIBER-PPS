@@ -18,6 +18,8 @@ router.get('/', (req, res) => {
 // Guardar nuevo registro
 router.post('/', (req, res) => {
     try {
+        //console.log('Datos recibidos en el body:', req.body);
+
         const { firstName, lastName, birthDate, weight, height, date } = req.body;
 
         // Validación de campos obligatorios
