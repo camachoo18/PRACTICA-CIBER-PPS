@@ -1,16 +1,6 @@
 {
   "records": [
     {
-      "id": 1760709942759,
-      "firstName": "Ivo",
-      "lastName": "Camacho",
-      "birthDate": "1999-12-10",
-      "weight": 67,
-      "height": 185,
-      "date": "2025-10-17",
-      "imc": "19.58"
-    },
-    {
       "id": 1760711542166,
       "firstName": "Test",
       "lastName": "Usuario",
@@ -21,93 +11,13 @@
       "imc": "22.86"
     },
     {
-      "id": 1760711542170,
-      "firstName": "Carlos",
-      "lastName": "López",
-      "birthDate": "1992-03-10",
-      "weight": 80,
-      "height": 180,
-      "date": "2024-01-15",
-      "imc": "24.69"
-    },
-    {
-      "id": 1760711542173,
-      "firstName": "Ana",
-      "lastName": "Martínez",
-      "birthDate": "1988-11-25",
-      "weight": 60,
-      "height": 160,
-      "date": "2024-01-15",
-      "imc": "23.44"
-    },
-    {
-      "id": 1760711542175,
-      "firstName": "Luis",
-      "lastName": "Rodríguez",
-      "birthDate": "1995-07-18",
-      "weight": 75,
-      "height": 175,
-      "date": "2024-01-15",
-      "imc": "24.49"
-    },
-    {
-      "id": 1760711772127,
+      "id": 1760711542166,
       "firstName": "Test",
       "lastName": "Usuario",
       "birthDate": "1990-01-01",
       "weight": 70,
       "height": 175,
       "date": "2024-01-15",
-      "imc": "22.86"
-    },
-    {
-      "id": 1760711772132,
-      "firstName": "Carlos",
-      "lastName": "López",
-      "birthDate": "1992-03-10",
-      "weight": 80,
-      "height": 180,
-      "date": "2024-01-15",
-      "imc": "24.69"
-    },
-    {
-      "id": 1760711772136,
-      "firstName": "Ana",
-      "lastName": "Martínez",
-      "birthDate": "1988-11-25",
-      "weight": 60,
-      "height": 160,
-      "date": "2024-01-15",
-      "imc": "23.44"
-    },
-    {
-      "id": 1760716242696,
-      "firstName": "juanito",
-      "lastName": "malasaña",
-      "birthDate": "2025-09-30",
-      "weight": 49,
-      "height": 160,
-      "date": "2025-10-17",
-      "imc": "19.14"
-    },
-    {
-      "id": 1760716374149,
-      "firstName": "alejandro de la corte",
-      "lastName": "grosso",
-      "birthDate": "2025-10-17",
-      "weight": 90,
-      "height": 180,
-      "date": "2025-10-17",
-      "imc": "27.78"
-    },
-    {
-      "id": 1760716405837,
-      "firstName": "Juan",
-      "lastName": "Pérez",
-      "birthDate": "1990-01-01",
-      "weight": 70,
-      "height": 175,
-      "date": "2025-10-17",
       "imc": "22.86"
     }
   ]
