@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "cypress:open": "cypress open"
+    "coverage:open": "npm run test:coverage && start coverage/index.html"
   },
   "repository": {
     "type": "git",
