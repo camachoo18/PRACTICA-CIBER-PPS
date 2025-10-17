@@ -19,6 +19,16 @@
       "height": 175,
       "date": "2024-01-15",
       "imc": "22.86"
+    },
+    {
+      "id": 1760717175463,
+      "firstName": "Juan",
+      "lastName": "Pérez",
+      "birthDate": "1990-01-01",
+      "weight": 70,
+      "height": 175,
+      "date": "2025-10-17",
+      "imc": "22.86"
     }
   ]
 }
