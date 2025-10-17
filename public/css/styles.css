@@ -6,8 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-width: 320px;
+    background: #667eea;
     min-height: 100vh;
     padding: 20px;
     padding-top: 80px; /* espacio para navbar fija */
@@ -68,9 +67,9 @@ input:focus {
 .btn-primary {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     color: white;
-    border: none;
+    border: 2px solid #667eea;
     border-radius: 5px;
     font-size: 16px;
     font-weight: 600;
@@ -78,8 +77,10 @@ input:focus {
     transition: transform 0.2s;
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
+.btn-primary:hover,
+.btn-primary:focus {
+  background: #5661d5; /* tono ligeramente más oscuro */
+  border-color: #5661d5;
 }
 
 .result-card {
