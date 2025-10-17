@@ -54,3 +54,31 @@ Servidor corriendo en http://localhost:3000
 ---
 
 **Nota**: Con esto podras acceder a la app web de registro de IMC.
+
+## 🧪 Pruebas Unitarias
+
+Se han implementado **pruebas unitarias** que garantizan la calidad del código y su correcto funcionamiento.  
+Estas pruebas cubren tres tipos principales de casos:
+
+### ✅ Casos Normales
+Verifican el comportamiento esperado con **entradas válidas**.  
+Ejemplo: cálculos correctos del IMC, validaciones de edad y respuestas HTTP válidas.
+
+### ⚡ Casos Límite
+Comprueban el funcionamiento en los **bordes de los rangos válidos**.  
+Ejemplo: valores mínimos y máximos de peso y altura, límites exactos de categorías IMC.
+
+### ❌ Errores Esperados
+Evalúan el manejo de **entradas inválidas o excepciones**.  
+Ejemplo: valores nulos, negativos, no numéricos o formatos incorrectos.
+
+---
+
+### 🚀 Ejecución de Pruebas
+
+Para ejecutar todas las pruebas unitarias del proyecto:
+
+```bash
+npm run test
+```
+De esta manera podra ejecutar un testeo de todos los casos previamente mencionados. Estas pruebas aseguran que el sistema sea fiable, mantenible y libre de errores antes de cada despliegue.
