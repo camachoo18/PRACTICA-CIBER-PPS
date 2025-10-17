@@ -14,6 +14,21 @@
             <h2>Nuevo Registro</h2>
             <form id="imcForm">
                 <div class="form-group">
+                    <label for="firstName">Nombre:</label>
+                    <input type="text" id="firstName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Apellido:</label>
+                    <input type="text" id="lastName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="birthDate">Fecha de Nacimiento:</label>
+                    <input type="date" id="birthDate" required>
+                </div>
+                
+                <div class="form-group">
                     <label for="weight">Peso (kg):</label>
                     <input type="number" id="weight" step="0.1" required>
                 </div>
@@ -24,7 +39,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="date">Fecha:</label>
+                    <label for="date">Fecha del Registro:</label>
                     <input type="date" id="date" required>
                 </div>
                 
@@ -34,6 +49,7 @@
 
         <div id="result" class="card result-card" style="display: none;">
             <h2>Resultado</h2>
+            <div id="patientInfo"></div>
             <div id="imcValue"></div>
             <div id="imcCategory"></div>
             <div id="imcExplanation"></div>

@@ -82,10 +82,42 @@ input:focus {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
+#patientInfo {
+    background: #e8f4f8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #667eea;
+}
+
+#patientInfo p {
+    margin: 5px 0;
+    color: #333;
+    font-weight: 500;
+}
+
 .record-item {
-    padding: 12px;
+    padding: 15px;
     background: #f8f9fa;
     border-left: 4px solid #667eea;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     border-radius: 5px;
+}
+
+.record-patient {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+.record-details {
+    color: #555;
+    margin-top: 5px;
+}
+
+.record-age {
+    color: #666;
+    font-style: italic;
+    font-size: 0.9em;
 }

@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 // Guardar nuevo registro
 router.post('/', (req, res) => {
     try {
-        const { weight, height, date } = req.body;
+        const { firstName, lastName, birthDate, weight, height, date } = req.body;
         
         let records = { records: [] };
         try {
@@ -33,6 +33,9 @@ router.post('/', (req, res) => {
         
         const newRecord = {
             id: Date.now(),
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            birthDate: birthDate,
             weight: parseFloat(weight),
             height: parseFloat(height),
             date: date || new Date().toISOString().split('T')[0],

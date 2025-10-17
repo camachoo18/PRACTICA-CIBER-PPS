@@ -1,10 +1,10 @@
-export async function saveRecord(weight, height, date) {
+export async function saveRecord(firstName, lastName, birthDate, weight, height, date) {
     const response = await fetch('/api/records', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ weight, height, date })
+        body: JSON.stringify({ firstName, lastName, birthDate, weight, height, date })
     });
     return await response.json();
 }

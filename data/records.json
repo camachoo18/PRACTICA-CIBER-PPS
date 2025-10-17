@@ -1,11 +1,14 @@
 {
   "records": [
     {
-      "id": 1760708396136,
-      "weight": 56,
-      "height": 165,
+      "id": 1760709942759,
+      "firstName": "Ivo",
+      "lastName": "Camacho",
+      "birthDate": "1999-12-10",
+      "weight": 67,
+      "height": 185,
       "date": "2025-10-17",
-      "imc": "20.57"
+      "imc": "19.58"
     }
   ]
 }
