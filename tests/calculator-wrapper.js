@@ -1,4 +1,9 @@
-export function calculateIMC(weight, height) {
+/**
+ * Wrapper de calculator.js para compatibilidad con Jest/Node.js
+ * Reimplementa las funciones usando CommonJS
+ */
+
+function calculateIMC(weight, height) {
     // Validaciones
     if (weight === null || weight === undefined || height === null || height === undefined) {
         throw new Error('El peso y la altura son requeridos');
@@ -25,7 +30,7 @@ export function calculateIMC(weight, height) {
     return imc.toFixed(2);
 }
 
-export function getIMCCategory(imc) {
+function getIMCCategory(imc) {
     // Validaciones
     if (imc === null || imc === undefined) {
         throw new Error('El IMC es requerido');
@@ -68,7 +73,4 @@ export function getIMCCategory(imc) {
     }
 }
 
-// Para compatibilidad con Node.js (testing)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { calculateIMC, getIMCCategory };
-}
+module.exports = { calculateIMC, getIMCCategory };
