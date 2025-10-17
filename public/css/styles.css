@@ -7,23 +7,27 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-width: 320px;
     min-height: 100vh;
     padding: 20px;
+    padding-top: 80px; /* espacio para navbar fija */
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
+    margin-top: 2rem;
 }
 
 h1 {
-    color: white;
+    color: #222;
     text-align: center;
     margin-bottom: 30px;
     font-size: 2.5em;
 }
 
 .card {
+    
     background: white;
     border-radius: 10px;
     padding: 25px;
@@ -82,42 +86,47 @@ input:focus {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-#patientInfo {
-    background: #e8f4f8;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    border-left: 4px solid #667eea;
-}
-
-#patientInfo p {
-    margin: 5px 0;
-    color: #333;
-    font-weight: 500;
-}
-
 .record-item {
-    padding: 15px;
+    padding: 12px;
     background: #f8f9fa;
     border-left: 4px solid #667eea;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     border-radius: 5px;
 }
 
-.record-patient {
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 8px;
+.navbar {
+    display: flex;
+    justify-content: space-between; /* separa izquierda/derecha */
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 40px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-left h1 {
+    font-size: 1.5em;
+    color: #222;
+    margin: 0;
+}
+
+.navbar-left a {
+    text-decoration: none;
+    color: #222;
+}
+
+.navbar-right a {
+    text-decoration: none;
+    color: #222;
+    font-weight: 600;
     font-size: 1.1em;
+    transition: color 0.3s;
 }
 
-.record-details {
-    color: #555;
-    margin-top: 5px;
-}
-
-.record-age {
-    color: #666;
-    font-style: italic;
-    font-size: 0.9em;
+.navbar-right a:hover {
+    color: #667eea;
 }
