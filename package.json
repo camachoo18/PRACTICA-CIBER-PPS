@@ -26,8 +26,8 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "chromedriver": "^142.0.0",
-    "cypress": "^15.4.0",
+    "chromedriver": "^141.0.3",
+    "cypress": "^15.5.0",
     "jest": "^30.2.0",
     "mocha": "^11.7.4",
     "supertest": "^7.1.4"
