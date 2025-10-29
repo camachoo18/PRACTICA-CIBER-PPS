@@ -26,8 +26,7 @@ jobs:
       - name: Generate coverage badge
         uses: tj-actions/coverage-badge-js@v2.0.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: coverage
+          path: coverage  
 
       - name: Upload coverage report (artifact)
         uses: actions/upload-artifact@v4
