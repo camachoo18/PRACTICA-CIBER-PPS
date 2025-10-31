@@ -18,3 +18,9 @@ jobs:
         run: npm install
       - name: Run Tests
         run: npm test
+      - name: Generate coverage badge  
+        uses: tj-actions/coverage-badge@v2
+        with:
+          path: '.'
+          reporth_path: './coverage/coverage-summary.json'
+          output_path: './coverage/coverage-badge.svg'  

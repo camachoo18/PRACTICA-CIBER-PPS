@@ -1,7 +1,7 @@
 module.exports = {
   testEnvironment: 'node',
   coverageDirectory: 'coverage',
-  coverageReporters: ['html', 'text', 'text-summary'],
+  coverageReporters: ['html', 'text', 'text-summary', 'json-summary'],
   collectCoverageFrom: [
     'tests/calculator-wrapper.js',
     'src/routes/*.js',
