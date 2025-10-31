@@ -9,17 +9,20 @@ jobs:
     runs-on: ubuntu-latest  
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'  
       - name: Install Dependencies
         run: npm install
+
       - name: Run Tests
-        run: npm test
+        run: npm run test:coverage
+
       - name: Generate coverage badge  
-        uses: tj-actions/coverage-badge@v2
+        uses: tj-actions/coverage-badge-js@v2.0.1
         with:
           path: '.'
           report_path: './coverage/coverage-summary.json'
