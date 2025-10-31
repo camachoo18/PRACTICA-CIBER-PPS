@@ -37,12 +37,4 @@ jobs:
           report_path: './coverage/coverage-summary.json'
           output_path: './coverage/badge.svg'
 
-      - name: Create Pull Request with badge
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: "main"
-          commit-message: "chore: update coverage badge"
-          branch: "chore/update-coverage-badge"
-          title: "Actualiza badge de cobertura"
-          body: "Generado automáticamente: coverage/badge.svg"
+
