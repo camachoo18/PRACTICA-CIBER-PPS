@@ -1,5 +1,7 @@
 # Sistema de Registro de IMC
 
+[![CI](https://github.com/camachoo18/PRACTICA-CIBER-PPS/actions/workflows/test.yml/badge.svg)](https://github.com/camachoo18/PRACTICA-CIBER-PPS/actions/workflows/test.yml)
+
 ![coverage](./coverage/badge.svg) 
 
 ## 🚀 Instrucciones de Ejecución

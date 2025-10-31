@@ -4,26 +4,42 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest  
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        
+        with:
+          persist-credentials: true
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  
-      - name: Install Dependencies
-        run: npm install
+          node-version: '18'
 
-      - name: Run Tests
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests (generate coverage)
         run: npm run test:coverage
 
-      - name: Generate coverage badge  
+      - name: Generate coverage badge
         uses: tj-actions/coverage-badge-js@v2.0.1
         with:
           path: '.'
           report_path: './coverage/coverage-summary.json'
-          output_path: './coverage/coverage-badge.svg'  
+          output_path: './coverage/badge.svg'
+
+      - name: Create Pull Request with badge
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update coverage badge"
+          branch: "chore/update-coverage-badge"
+          title: "Actualiza badge de cobertura"
+          body: "Generado automáticamente: coverage/badge.svg"
