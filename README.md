@@ -1,5 +1,7 @@
 # Sistema de Registro de IMC
 
+![coverage](./coverage/badge.svg) 
+
 ## 🚀 Instrucciones de Ejecución
 
 ### Prerrequisitos
