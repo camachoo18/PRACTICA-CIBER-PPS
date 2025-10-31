@@ -22,5 +22,5 @@ jobs:
         uses: tj-actions/coverage-badge@v2
         with:
           path: '.'
-          reporth_path: './coverage/coverage-summary.json'
+          report_path: './coverage/coverage-summary.json'
           output_path: './coverage/coverage-badge.svg'  
