@@ -3,7 +3,7 @@
  * Cubre: casos normales, casos límite y manejo de errores
  */
 
-const { calculateIMC, getIMCCategory } = require('./calculator-wrapper.js');
+const { calculateIMC, getIMCCategory } = require('./calculator-wrapper.tests.js');
 
 // ... resto del código sin cambios
 describe('calculateIMC - Cálculo del Índice de Masa Corporal', () => {
