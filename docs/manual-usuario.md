@@ -1,4 +1,51 @@
-# 🧭 **Resumen del Sistema de Registro de IMC**
+## 📋 **Especificación de Requisitos**
+
+### 📌 **Requisitos Funcionales (RF)**
+
+| ID | Descripción | Prioridad | Implementación | Estado |
+|----|-------------|-----------|----------------|--------|
+| **RF-001** | Permitir ingresar peso en kilogramos | Alta | [`public/index.html`](../public/index.html) | ✅ |
+| **RF-002** | Permitir ingresar altura en centímetros | Alta | [`public/index.html`](../public/index.html) | ✅ |
+| **RF-003** | Calcular automáticamente el IMC usando la fórmula: peso/(altura en metros)² | Alta | [`public/js/calculator.js`](../public/js/calculator.js) | ✅ |
+| **RF-004** | Clasificar el IMC según los rangos de la OMS | Alta | [`public/js/calculator.js`](../public/js/calculator.js) | ✅ |
+| **RF-005** | Guardar registros de peso, altura, IMC y fecha | Alta | [`src/routes/records.js`](../src/routes/records.js) | ✅ |
+| **RF-006** | Permitir ingresar nombre y apellido del paciente | Alta | [`public/index.html`](../public/index.html) | ✅ |
+| **RF-007** | Calcular automáticamente la edad del paciente | Alta | [`public/js/app.js`](../public/js/app.js) | ✅ |
+| **RF-008** | Mostrar un historial completo de registros | Alta | [`public/js/app.js`](../public/js/app.js)  | ✅ |
+| **RF-009** | Ordenar el historial del más reciente al más antiguo | Media | [`public/js/app.js`](../public/js/app.js) | ✅ |
+| **RF-010** | Asignar un color diferente a cada categoría de IMC | Media | [`public/js/calculator.js`](../public/js/calculator.js) | ✅ |
+| **RF-011** | Proporcionar explicaciones personalizadas según el IMC | Media | [`public/js/calculator.js`](../public/js/calculator.js) | ✅ |
+| **RF-012** | Permitir múltiples registros en el mismo día | Baja | [`src/routes/records.js`](../src/routes/records.js) | ✅ |
+| **RF-013** | Establecer la fecha actual por defecto | Baja | [`public/js/app.js`](../public/js/app.js) | ✅ |
+
+### 🔧 **Requisitos No Funcionales (RNF)**
+
+| ID | Descripción | Verificación | Estado |
+|----|-------------|--------------|--------|
+| **RNF-001** | El tiempo de respuesta del cálculo IMC debe ser < 200ms | Manual / Performance tests | ✅ |
+| **RNF-002** | La interfaz es responsive (móvil, tablet, escritorio) | [`public/css/styles.css`](../public/css/styles.css) | ✅ |
+| **RNF-003** | La cobertura de código es ≥ 80% | [`jest.config.js`](../jest.config.js) | ✅ 94.44% |
+| **RNF-004** | Validar todos los inputs antes de procesar | [`public/js/app.js`](../public/js/app.js) | ✅ |
+| **RNF-005** | Persistir entre sesiones | [`data/records.json`](../data/records.json) | ✅ |
+| **RNF-006** | Manejar errores de forma robusta sin crashes | [`src/routes/records.js`](../src/routes/records.js) | ✅ |
+| **RNF-007** | Tener una cobertura de tests unitarios > 90% | [`coverage/index.html`](../coverage/index.html) | ✅ 94.44% |
+| **RNF-008** | Funcionar en navegadores modernos (Chrome, Firefox) | Manual | ✅ |
+| **RNF-009** | Seguir las guías de la OMS para categorización IMC | [`public/js/calculator.js`](../public/js/calculator.js) | ✅ |
+| **RNF-010** | Los mensajes de error son claros | [`public/js/calculator.js`](../public/js/calculator.js) | ✅ |
+
+### 🔒 **Requisitos de Seguridad (RS)**
+
+| ID | Descripción | Verificación | Estado |
+|----|-------------|--------------|--------|
+| **RS-001** | Validar peso > 0 | [`public/js/calculator.js`](../public/js/calculator.js) | ✅ |
+| **RS-002** | Validar altura > 0 | [`public/js/calculator.js`](../public/js/calculator.js)  | ✅ |
+| **RS-003** | Rechazar valores no numéricos | [`public/js/calculator.js`](../public/js/calculator.js)  | ✅ |
+| **RS-004** | Sanitizar inputs de texto (nombre, apellido) | [`src/routes/records.js`](../src/routes/records.js) (`.trim()`) | ✅ |
+| **RS-005** | Validar formato de fecha (YYYY-MM-DD) | [`public/index.html`](../public/index.html) (`type="date"`) | ✅ |
+
+---
+
+# 🧭 **Descripción del Sistema de Registro de IMC**
 
 ## 📘 **Manual de Usuario – Descripción General**
 El **Sistema de Registro de IMC** es una aplicación web que permite al usuario **registrar peso y altura diariamente**, calcular automáticamente su **Índice de Masa Corporal (IMC)** y mostrar su **estado de salud** según los rangos de la **OMS**.  

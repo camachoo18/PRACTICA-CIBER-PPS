@@ -2,7 +2,7 @@
 
 ## 📅 Información del Reporte
 
-- **Fecha de generación**: 17 de Enero de 2025
+- **Fecha de generación**: 1 de noviembre de 2025
 - **Herramienta**: Jest Coverage (Istanbul) v29.7.0
 - **Comando**: `npm run test:coverage`
 - **Informe HTML**: [`coverage/index.html`](../coverage/index.html)
@@ -167,5 +167,4 @@ test('Debe retornar 500 si falla escritura en archivo', async () => {
 
 ---
 
-**Última actualización:** 17 de Enero de 2025  
-**Próxima revisión:** Después de implementar test de errores I/O
+**Última actualización:** 7 de noviembre de 2025
