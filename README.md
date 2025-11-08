@@ -84,6 +84,17 @@ Ejemplo: valores nulos, negativos, no numéricos o formatos incorrectos.
 Para ejecutar todas las pruebas unitarias del proyecto:
 
 ```bash
-npm run test
+npm run test    # Ejecutar pruebas
 ```
 De esta manera podra ejecutar un testeo de todos los casos previamente mencionados. Estas pruebas aseguran que el sistema sea fiable, mantenible y libre de errores antes de cada despliegue.
+
+Para ejecutar el coverage del proyecto
+
+```bash
+npm run test:coverage     # Generar cobertura
+```
+De esta manera genera un coverage del proyecto en un html. Para acceder al informe debes irte a:
+
+```bash
+start coverage/index.html
+```
