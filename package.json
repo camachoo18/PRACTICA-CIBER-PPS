@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/camachoo18/PRACTICA-CIBER-PPS#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.2.0"
   },
   "devDependencies": {
     "chromedriver": "^142.0.0",
