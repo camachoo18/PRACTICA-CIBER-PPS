@@ -18,17 +18,17 @@ router.get('/', (req, res) => {
 // Guardar nuevo registro
 router.post('/', (req, res) => {
     try {
-        //console.log('Datos recibidos en el body:', req.body);
-
         const { firstName, lastName, birthDate, weight, height, date } = req.body;
 
         // Validación: solo letras y espacios en texto
         const onlyLettersRegex = /^[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+$/;
         
+        // Validaciones estrictas
         if (!firstName || !lastName || !birthDate || !weight || !height || weight <= 0 || height <= 0) {
             return res.status(400).json({ success: false, error: 'Todos los campos son obligatorios y deben ser válidos.' });
         }
         
+        // Validar que no contengan caracteres peligrosos
         if (!onlyLettersRegex.test(firstName.trim())) {
             return res.status(400).json({ success: false, error: 'El nombre solo debe contener letras y espacios.' });
         }
@@ -37,18 +37,12 @@ router.post('/', (req, res) => {
             return res.status(400).json({ success: false, error: 'El apellido solo debe contener letras y espacios.' });
         }
 
-
-        // Validación de campos obligatorios
-        if (!firstName || !lastName || !birthDate || !weight || !height || weight <= 0 || height <= 0) {
-            return res.status(400).json({ success: false, error: 'Todos los campos son obligatorios y deben ser válidos.' });
-        }
-
         let records = { records: [] };
         try {
             const data = fs.readFileSync(DATA_FILE, 'utf8');
             records = JSON.parse(data);
         } catch (error) {
-            // Archivo no existe, usar objeto vacío
+            
         }
 
         // Convertir altura de cm a metros para el cálculo

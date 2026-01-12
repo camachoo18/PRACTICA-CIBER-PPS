@@ -22,6 +22,18 @@ function calculateAge(birthDate) {
     return age;
 }
 
+/// Función auxiliar para escapar HTML
+function escapeHTML(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -32,8 +44,7 @@ form.addEventListener('submit', async (e) => {
     const height = parseFloat(document.getElementById('height').value);
     const date = document.getElementById('date').value;
 
-
-        // Validación: solo letras y espacios en texto
+    // Validación: solo letras y espacios en texto
     const onlyLettersRegex = /^[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+$/;
     
     if (!onlyLettersRegex.test(firstName)) {
@@ -45,7 +56,6 @@ form.addEventListener('submit', async (e) => {
         alert('El apellido solo debe contener letras y espacios');
         return;
     }
-
 
     // Validación de peso y altura
     if (isNaN(weight) || weight <= 0) {
@@ -61,17 +71,27 @@ form.addEventListener('submit', async (e) => {
     const category = getIMCCategory(parseFloat(imc));
     const age = calculateAge(birthDate);
     
-    // Mostrar información del paciente
-    document.getElementById('patientInfo').innerHTML = `
-        <p><strong>Paciente:</strong> ${firstName} ${lastName}</p>
-        <p><strong>Edad:</strong> ${age} años</p>
-        <p><strong>Fecha de Nacimiento:</strong> ${new Date(birthDate).toLocaleDateString('es-ES')}</p>
-    `;
+    // Mostrar información del paciente - ESCAPAR HTML
+    const patientInfo = document.getElementById('patientInfo');
+    patientInfo.innerHTML = '';
+    
+    const p1 = document.createElement('p');
+    p1.innerHTML = `<strong>Paciente:</strong> ${escapeHTML(firstName)} ${escapeHTML(lastName)}`;
+    
+    const p2 = document.createElement('p');
+    p2.innerHTML = `<strong>Edad:</strong> ${age} años`;
+    
+    const p3 = document.createElement('p');
+    p3.innerHTML = `<strong>Fecha de Nacimiento:</strong> ${new Date(birthDate).toLocaleDateString('es-ES')}`;
+    
+    patientInfo.appendChild(p1);
+    patientInfo.appendChild(p2);
+    patientInfo.appendChild(p3);
     
     // Mostrar resultado
-    document.getElementById('imcValue').innerHTML = `<h3>IMC: ${imc}</h3>`;
-    document.getElementById('imcCategory').innerHTML = `<p style="color: ${category.color}; font-weight: bold;">${category.category}</p>`;
-    document.getElementById('imcExplanation').innerHTML = `<p>${category.explanation}</p>`;
+    document.getElementById('imcValue').innerHTML = `<h3>IMC: ${escapeHTML(imc)}</h3>`;
+    document.getElementById('imcCategory').innerHTML = `<p style="color: ${category.color}; font-weight: bold;">${escapeHTML(category.category)}</p>`;
+    document.getElementById('imcExplanation').innerHTML = `<p>${escapeHTML(category.explanation)}</p>`;
     resultDiv.style.display = 'block';
     
     // Guardar registro
@@ -91,29 +111,34 @@ async function loadRecords() {
         return;
     }
     
-    recordsList.innerHTML = records
+    recordsList.innerHTML = '';
+    records
         .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .map(record => {
+        .forEach(record => {
             const category = getIMCCategory(parseFloat(record.imc));
             const age = calculateAge(record.birthDate);
-            return `
-                <div class="record-item">
-                    <div class="record-patient">
-                        👤 ${record.firstName} ${record.lastName}
-                    </div>
-                    <div class="record-age">
-                        Edad: ${age} años | Fecha de Nacimiento: ${new Date(record.birthDate).toLocaleDateString('es-ES')}
-                    </div>
-                    <div class="record-details">
-                        <strong>${record.date}</strong> - 
-                        Peso: ${record.weight}kg | 
-                        Altura: ${record.height}cm | 
-                        IMC: <span style="color: ${category.color}; font-weight: bold;">${record.imc} (${category.category})</span>
-                    </div>
+            
+            const recordDiv = document.createElement('div');
+            recordDiv.className = 'record-item';
+            
+            // Escapar todos los valores del usuario
+            recordDiv.innerHTML = `
+                <div class="record-patient">
+                    👤 ${escapeHTML(record.firstName)} ${escapeHTML(record.lastName)}
+                </div>
+                <div class="record-age">
+                    Edad: ${age} años | Fecha de Nacimiento: ${new Date(record.birthDate).toLocaleDateString('es-ES')}
+                </div>
+                <div class="record-details">
+                    <strong>${escapeHTML(record.date)}</strong> - 
+                    Peso: ${escapeHTML(record.weight.toString())}kg | 
+                    Altura: ${escapeHTML(record.height.toString())}cm | 
+                    IMC: <span style="color: ${category.color}; font-weight: bold;">${escapeHTML(record.imc)} (${escapeHTML(category.category)})</span>
                 </div>
             `;
-        })
-        .join('');
+            
+            recordsList.appendChild(recordDiv);
+        });
 }
 
 // Cargar registros al iniciar
