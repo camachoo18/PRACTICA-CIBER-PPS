@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
             const data = fs.readFileSync(DATA_FILE, 'utf8');
             records = JSON.parse(data);
         } catch (error) {
-            
+            // Archivo no existe, usar objeto vacío
         }
 
         // Convertir altura de cm a metros para el cálculo

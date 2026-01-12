@@ -31,7 +31,7 @@ function escapeHTML(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
 form.addEventListener('submit', async (e) => {
@@ -121,21 +121,40 @@ async function loadRecords() {
             const recordDiv = document.createElement('div');
             recordDiv.className = 'record-item';
             
-            // Escapar todos los valores del usuario
-            recordDiv.innerHTML = `
-                <div class="record-patient">
-                    👤 ${escapeHTML(record.firstName)} ${escapeHTML(record.lastName)}
-                </div>
-                <div class="record-age">
-                    Edad: ${age} años | Fecha de Nacimiento: ${new Date(record.birthDate).toLocaleDateString('es-ES')}
-                </div>
-                <div class="record-details">
-                    <strong>${escapeHTML(record.date)}</strong> - 
-                    Peso: ${escapeHTML(record.weight.toString())}kg | 
-                    Altura: ${escapeHTML(record.height.toString())}cm | 
-                    IMC: <span style="color: ${category.color}; font-weight: bold;">${escapeHTML(record.imc)} (${escapeHTML(category.category)})</span>
-                </div>
-            `;
+            // MÉTODO SEGURO: Crear todo con createElement
+            const patientDiv = document.createElement('div');
+            patientDiv.className = 'record-patient';
+            const avatarSpan = document.createElement('span');
+            avatarSpan.textContent = '👤 ';
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = `${record.firstName} ${record.lastName}`;
+            patientDiv.appendChild(avatarSpan);
+            patientDiv.appendChild(nameSpan);
+            
+            const ageDiv = document.createElement('div');
+            ageDiv.className = 'record-age';
+            const ageText = document.createElement('span');
+            ageText.textContent = `Edad: ${age} años | Fecha de Nacimiento: ${new Date(record.birthDate).toLocaleDateString('es-ES')}`;
+            ageDiv.appendChild(ageText);
+            
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = 'record-details';
+            const dateSpan = document.createElement('strong');
+            dateSpan.textContent = record.date;
+            const detailsText = document.createElement('span');
+            detailsText.textContent = ` - Peso: ${record.weight}kg | Altura: ${record.height}cm | IMC: ${record.imc} (${category.category})`;
+            const imcSpan = document.createElement('span');
+            imcSpan.style.color = category.color;
+            imcSpan.style.fontWeight = 'bold';
+            imcSpan.textContent = `${record.imc} (${category.category})`;
+            
+            detailsDiv.appendChild(dateSpan);
+            detailsDiv.appendChild(document.createTextNode(` - Peso: ${record.weight}kg | Altura: ${record.height}cm | IMC: `));
+            detailsDiv.appendChild(imcSpan);
+            
+            recordDiv.appendChild(patientDiv);
+            recordDiv.appendChild(ageDiv);
+            recordDiv.appendChild(detailsDiv);
             
             recordsList.appendChild(recordDiv);
         });
