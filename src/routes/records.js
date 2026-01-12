@@ -22,6 +22,22 @@ router.post('/', (req, res) => {
 
         const { firstName, lastName, birthDate, weight, height, date } = req.body;
 
+        // Validación: solo letras y espacios en texto
+        const onlyLettersRegex = /^[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+$/;
+        
+        if (!firstName || !lastName || !birthDate || !weight || !height || weight <= 0 || height <= 0) {
+            return res.status(400).json({ success: false, error: 'Todos los campos son obligatorios y deben ser válidos.' });
+        }
+        
+        if (!onlyLettersRegex.test(firstName.trim())) {
+            return res.status(400).json({ success: false, error: 'El nombre solo debe contener letras y espacios.' });
+        }
+        
+        if (!onlyLettersRegex.test(lastName.trim())) {
+            return res.status(400).json({ success: false, error: 'El apellido solo debe contener letras y espacios.' });
+        }
+
+
         // Validación de campos obligatorios
         if (!firstName || !lastName || !birthDate || !weight || !height || weight <= 0 || height <= 0) {
             return res.status(400).json({ success: false, error: 'Todos los campos son obligatorios y deben ser válidos.' });

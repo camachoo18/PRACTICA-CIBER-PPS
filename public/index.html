@@ -24,7 +24,12 @@
             <form id="imcForm">
                 <div class="form-group">
                     <label for="firstName">Nombre:</label>
-                    <input type="text" id="firstName" required>
+                     <input 
+                        type="text" 
+                        id="firstName" 
+                        pattern="[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+"
+                        title="Solo se permiten letras y espacios"
+                        required>
                 </div>
                 
                 <div class="form-group">

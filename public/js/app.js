@@ -32,6 +32,21 @@ form.addEventListener('submit', async (e) => {
     const height = parseFloat(document.getElementById('height').value);
     const date = document.getElementById('date').value;
 
+
+        // Validación: solo letras y espacios en texto
+    const onlyLettersRegex = /^[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+$/;
+    
+    if (!onlyLettersRegex.test(firstName)) {
+        alert('El nombre solo debe contener letras y espacios');
+        return;
+    }
+    
+    if (!onlyLettersRegex.test(lastName)) {
+        alert('El apellido solo debe contener letras y espacios');
+        return;
+    }
+
+
     // Validación de peso y altura
     if (isNaN(weight) || weight <= 0) {
         alert('El peso debe ser mayor a 0');
