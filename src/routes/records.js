@@ -24,8 +24,8 @@ router.post('/', (req, res) => {
         const onlyLettersRegex = /^[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+$/;
         
         // Validaciones estrictas
-        if (!firstName || !lastName || !birthDate || !weight || !height || weight <= 0 || height <= 0) {
-            return res.status(400).json({ success: false, error: 'Todos los campos son obligatorios y deben ser válidos.' });
+        if (!firstName || !lastName || !birthDate || !weight || !height || weight <= 0 || weight > 300 || height <= 0) {
+            return res.status(400).json({ success: false, error: 'El peso debe estar entre 1 y 300 kg. Todos los campos son obligatorios.' });
         }
         
         // Validar que no contengan caracteres peligrosos

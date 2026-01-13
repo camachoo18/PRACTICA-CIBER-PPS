@@ -58,8 +58,8 @@ form.addEventListener('submit', async (e) => {
     }
 
     // Validación de peso y altura
-    if (isNaN(weight) || weight <= 0) {
-        alert('El peso debe ser mayor a 0');
+    if (isNaN(weight) || weight <= 0 || weight > 300) {
+        alert('El peso debe estar entre 1 y 300 kg');
         return;
     }
     if (isNaN(height) || height <= 0) {
