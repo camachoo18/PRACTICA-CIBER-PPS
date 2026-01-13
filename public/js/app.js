@@ -12,6 +12,12 @@ document.getElementById('date').valueAsDate = new Date();
 function calculateAge(birthDate) {
     const today = new Date();
     const birth = new Date(birthDate);
+    
+    // Validar que la fecha de nacimiento no sea en el futuro
+    if (birth > today) {
+        throw new Error('La fecha de nacimiento no puede ser en el futuro');
+    }
+    
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
     
@@ -40,6 +46,12 @@ form.addEventListener('submit', async (e) => {
     const firstName = document.getElementById('firstName').value.trim();
     const lastName = document.getElementById('lastName').value.trim();
     const birthDate = document.getElementById('birthDate').value;
+
+    if (new Date(birthDate) > new Date()) {
+        alert('La fecha de nacimiento no puede ser en el futuro');
+        return;
+    }
+
     const weight = parseFloat(document.getElementById('weight').value);
     const height = parseFloat(document.getElementById('height').value);
     const date = document.getElementById('date').value;
