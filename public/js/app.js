@@ -74,8 +74,8 @@ form.addEventListener('submit', async (e) => {
         alert('El peso debe estar entre 1 y 300 kg');
         return;
     }
-    if (isNaN(height) || height <= 0) {
-        alert('La altura debe ser mayor a 0');
+    if (isNaN(height) || height <= 0 || height > 250) {
+        alert('La altura debe estar entre 1 y 250 cm');
         return;
     }
     
