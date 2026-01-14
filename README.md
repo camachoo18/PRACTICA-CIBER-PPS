@@ -25,14 +25,18 @@
    npm install
    ```
 
-3. **Verificar que existe el archivo de datos**
+3. **Ejecutar archivo setup.sh/setup.bat dependiendo del SO para poner en funcionamiento proyecto**
    
-   El archivo `data/records.json` debe contener y es donde se guardara nuestros datos de altura y peso:
-   ```json
-   {
-     "records": []
-   }
+   El archivo `setup.sh` debe ejecutarse en linux:
+   ```bash
+   chmod +x setup.sh
+   ./setup.sh
    ```
+   El archivo `setup.bat` debe ejecutarse en Windows:
+   ```bash
+   setup.bat
+   ```
+   
 
 4. **Iniciar el servidor**
    ```bash
