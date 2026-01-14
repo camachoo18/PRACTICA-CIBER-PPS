@@ -131,3 +131,37 @@ input:focus {
 .navbar-right a:hover {
     color: #667eea;
 }
+
+.navbar-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.navbar-right a {
+    text-decoration: none;
+    color: #222;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.navbar-right a:hover {
+    color: #667eea;
+}
+
+.btn-logout {
+    padding: 8px 20px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-logout:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+}

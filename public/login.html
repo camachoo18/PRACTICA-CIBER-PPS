@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Registro de IMC</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+        <script>
+        // Si ya hay token, redirigir a /app
+        if (localStorage.getItem('token')) {
+            window.location.href = '/app';
+        }
+    </script>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1>📊 Registro de IMC</h1>
+            <h2>Iniciar Sesión</h2>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        required
+                        placeholder="tu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        required
+                        placeholder="••••••••">
+                </div>
+                
+                <button type="submit" class="btn-primary">Iniciar Sesión</button>
+            </form>
+            
+            <div id="errorMessage" class="error-message"></div>
+            
+            <p class="auth-link">
+                ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Registro de IMC</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+        <script>
+        // Si ya hay token, redirigir a /app
+        if (localStorage.getItem('token')) {
+            window.location.href = '/app';
+        }
+    </script>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1>📊 Registro de IMC</h1>
+            <h2>Crear Cuenta</h2>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="firstName">Nombre:</label>
+                    <input 
+                        type="text" 
+                        id="firstName" 
+                        required
+                        placeholder="Juan"
+                        pattern="[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+"
+                        title="Solo letras y espacios">
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Apellido:</label>
+                    <input 
+                        type="text" 
+                        id="lastName" 
+                        required
+                        placeholder="Pérez"
+                        pattern="[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+"
+                        title="Solo letras y espacios">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        required
+                        placeholder="tu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        required
+                        placeholder="Mínimo 8 caracteres"
+                        minlength="8">
+                </div>
+                
+                <div class="form-group">
+                    <label for="passwordConfirm">Confirmar Contraseña:</label>
+                    <input 
+                        type="password" 
+                        id="passwordConfirm" 
+                        required
+                        placeholder="Confirma tu contraseña"
+                        minlength="8">
+                </div>
+                
+                <button type="submit" class="btn-primary">Crear Cuenta</button>
+            </form>
+            
+            <div id="errorMessage" class="error-message"></div>
+            
+            <p class="auth-link">
+                ¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/register.js"></script>
+</body>
+</html>

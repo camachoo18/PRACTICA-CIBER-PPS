@@ -1,12 +1,25 @@
 import { calculateIMC, getIMCCategory } from './calculator.js';
 import { saveRecord, getRecords } from './storage.js';
 
+
 const form = document.getElementById('imcForm');
 const resultDiv = document.getElementById('result');
 const recordsList = document.getElementById('recordsList');
 
 // Establecer fecha actual por defecto
 document.getElementById('date').valueAsDate = new Date();
+
+//cerrar sesion
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        // Eliminar token del localStorage
+        localStorage.removeItem('token');
+        
+        // Redirigir a login
+        window.location.href = '/login';
+    });
+}
 
 // Función para calcular edad
 function calculateAge(birthDate) {
@@ -27,6 +40,15 @@ function calculateAge(birthDate) {
     
     return age;
 }
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadRecords();
+});
+
+document.addEventListener('visibilitychange', async () => {
+    if (!document.hidden) {
+        await loadRecords();
+    }
+});
 
 /// Función auxiliar para escapar HTML
 function escapeHTML(text) {
