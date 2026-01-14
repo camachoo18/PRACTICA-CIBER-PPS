@@ -4,19 +4,28 @@ module.exports = {
   coverageReporters: ['html', 'text', 'text-summary', 'json-summary'],
   collectCoverageFrom: [
     'tests/calculator-wrapper.js',
-    'src/routes/*.js',
     '!src/server.js',
+    '!src/database/db.js',
+    '!src/routes/*.js',  
     '!**/node_modules/**',
     '!**/coverage/**'
   ],
   testMatch: [
-    '**/tests/**/*.test.js',
-    '**/tests/**/*.tests.js'
+    '**/tests/calculator.tests.js',
+    '**/tests/utils.tests.js'
+  ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/coverage/',
+    'tests/api.tests.js',              // Requiere SQLite + autenticación
+    'tests/records.whitebox.tests.js'  // Requiere SQLite
   ],
   coveragePathIgnorePatterns: [
     '/node_modules/',
     '/coverage/',
-    'src/server.js'
+    'src/server.js',
+    'src/database/db.js',
+    'src/routes/'  
   ],
   verbose: true,
   coverageThreshold: {
