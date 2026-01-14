@@ -16,14 +16,19 @@ echo ""
 # 1. Crear archivo .env
 echo -e "${YELLOW}📝 Creando archivo .env...${NC}"
 
+# Generar JWT_SECRET aleatorio (64 caracteres hexadecimales)
+JWT_SECRET=$(openssl rand -hex 32)
+
+
 cat > .env << 'EOF'
-JWT_SECRET=APPClassPPS
+JWT_SECRET=${JWT_SECRET}
 PORT=3000
 NODE_ENV=development
 EOF
 
 if [ -f .env ]; then
-    echo -e "${GREEN}✅ Archivo .env creado exitosamente${NC}"
+    echo -e "${GREEN}✅ Archivo .env creado con clave única generada${NC}"
+    echo -e "${BLUE}🔒 Tu JWT_SECRET ha sido generado automáticamente${NC}"
 else
     echo -e "${RED}❌ Error al crear .env${NC}"
     exit 1
