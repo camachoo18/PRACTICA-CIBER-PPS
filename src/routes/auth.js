@@ -108,14 +108,14 @@ router.post('/register', (req, res) => {
     if (password.length < 12) {
         return res.status(400).json({ 
             success: false, 
-            error: 'La contraseña debe tener al menos 8 caracteres' 
+            error: 'La contraseña debe tener al menos 12 caracteres' 
         });
     }
 
     if (password.length > 72) {
         return res.status(400).json({ 
             success: false, 
-            error: 'La contraseña no puede exceder 64 caracteres' 
+            error: 'La contraseña no puede exceder 72 caracteres' 
         });
     }
 
