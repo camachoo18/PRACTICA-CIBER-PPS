@@ -46,6 +46,13 @@ router.post('/register', (req, res) => {
         });
     }
 
+    if (password.length > 64) {
+        return res.status(400).json({ 
+            success: false, 
+            error: 'La contraseña no puede exceder 64 caracteres' 
+        });
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ 
