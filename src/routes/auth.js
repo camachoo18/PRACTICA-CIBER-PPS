@@ -4,6 +4,72 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db');
 
+
+// Almacenamiento en memoria de intentos fallidos
+const loginAttempts = new Map();
+
+// Configuración
+const MAX_ATTEMPTS = 3;
+const LOCKOUT_DURATION = 5 * 60 * 1000; // 15 minutos en milisegundos
+
+function checkLoginAttempts(email) {
+    const key = email.toLowerCase();
+    const now = Date.now();
+    
+    if (!loginAttempts.has(key)) {
+        loginAttempts.set(key, { count: 0, lockedUntil: null });
+    }
+    
+    const attempts = loginAttempts.get(key);
+    
+    // Verificar si está bloqueado
+    if (attempts.lockedUntil && now < attempts.lockedUntil) {
+        const remainingMinutes = Math.ceil((attempts.lockedUntil - now) / 60000);
+        return {
+            blocked: true,
+            message: `Cuenta bloqueada temporalmente. Intenta de nuevo en ${remainingMinutes} minuto(s)`
+        };
+    }
+    
+    // Limpiar bloqueo si ya expiró
+    if (attempts.lockedUntil && now >= attempts.lockedUntil) {
+        attempts.count = 0;
+        attempts.lockedUntil = null;
+    }
+    
+    return { blocked: false };
+}
+
+function recordFailedAttempt(email) {
+    const key = email.toLowerCase();
+    const attempts = loginAttempts.get(key);
+    
+    attempts.count++;
+    
+    // Bloquear tras alcanzar el límite
+    if (attempts.count >= MAX_ATTEMPTS) {
+        attempts.lockedUntil = Date.now() + LOCKOUT_DURATION;
+    }
+}
+
+function resetAttempts(email) {
+    const key = email.toLowerCase();
+    if (loginAttempts.has(key)) {
+        loginAttempts.set(key, { count: 0, lockedUntil: null });
+    }
+}
+
+// Limpieza automática cada hora
+setInterval(() => {
+    const now = Date.now();
+    for (const [email, data] of loginAttempts.entries()) {
+        if (data.lockedUntil && now >= data.lockedUntil) {
+            loginAttempts.delete(email);
+        }
+    }
+}, 60 * 60 * 1000); // 1 hora
+
+
 // Middleware para verificar token
 function verifyToken(req, res, next) {
     const token = req.headers['authorization']?.split(' ')[1];
@@ -115,8 +181,18 @@ router.post('/login', (req, res) => {
             error: 'Email y contraseña requeridos' 
         });
     }
+        // Verificar intentos
+        const attemptCheck = checkLoginAttempts(email);
+            if (attemptCheck.blocked) {
+                return res.status(429).json({
+                    success: false,
+                    error: attemptCheck.message
+                });
+            }
 
-    db.get(
+
+
+     db.get(
         'SELECT * FROM users WHERE email = ?',
         [email.toLowerCase()],
         (err, user) => {
@@ -128,6 +204,8 @@ router.post('/login', (req, res) => {
             }
 
             if (!user) {
+                // REGISTRAR INTENTO FALLIDO
+                recordFailedAttempt(email);
                 return res.status(401).json({ 
                     success: false, 
                     error: 'Email o contraseña incorrectos' 
@@ -143,11 +221,16 @@ router.post('/login', (req, res) => {
                 }
 
                 if (!isPasswordValid) {
+                    // REGISTRAR INTENTO FALLIDO
+                    recordFailedAttempt(email);
                     return res.status(401).json({ 
                         success: false, 
                         error: 'Email o contraseña incorrectos' 
                     });
                 }
+
+                // LOGIN EXITOSO - RESETEAR INTENTOS
+                resetAttempts(email);
 
                 const token = jwt.sign(
                     { userId: user.id },
