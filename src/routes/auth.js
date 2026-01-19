@@ -62,7 +62,7 @@ router.post('/register', (req, res) => {
     }
 
     // Hashear contraseña
-    bcrypt.hash(password, 10, (err, hashedPassword) => {
+    bcrypt.hash(password, 12, (err, hashedPassword) => {
         if (err) {
             return res.status(500).json({ 
                 success: false, 
