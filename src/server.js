@@ -11,6 +11,22 @@ const PORT = process.env.PORT || 3000;
 //Middleware seguridad HSTS
 app.use(helmet());
 
+// CSP - Política de Seguridad de Contenidos
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'"], // unsafe-inline solo en desarrollo
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    imgSrc: ["'self'", "data:", "https:"],
+    connectSrc: ["'self'", "http://localhost:*"],
+    fontSrc: ["'self'"],
+    objectSrc: ["'none'"],
+    mediaSrc: ["'self'"],
+    frameSrc: ["'none'"]
+  }
+}));
+
+
 // HSTS - En desarrollo sin HTTPS, en producción lo aplica automáticamente
 if (process.env.NODE_ENV === 'production') {
   app.use(helmet.hsts({
