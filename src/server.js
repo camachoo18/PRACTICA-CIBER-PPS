@@ -1,11 +1,24 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require ('helmet');
 const path = require('path');
 const { router: authRouter } = require('./routes/auth');
 const recordsRouter = require('./routes/records');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+//Middleware seguridad HSTS
+app.use(helmet());
+
+// HSTS - En desarrollo sin HTTPS, en producción lo aplica automáticamente
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet.hsts({
+    maxAge: 31536000, // 1 año en segundos
+    includeSubDomains: true,
+    preload: true
+  }));
+}
 
 // Middleware
 app.use(express.json());
