@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Registro de IMC</title>
     <link rel="stylesheet" href="css/auth.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 </head>
 <body>
         <script>
@@ -70,7 +72,13 @@
                         minlength="12">
                 </div>
                 
-                <button type="submit" class="btn-primary">Crear Cuenta</button>
+                <!--CAPTCHA-->
+                <div class="cf-turnstile" 
+                     data-sitekey="0x4AAAAAACSJOvggfQ3wY6dP"
+                     data-theme="light">
+                </div>
+
+        <button type="submit" class="btn-primary">Registrarse</button>
             </form>
             
             <div id="errorMessage" class="error-message"></div>

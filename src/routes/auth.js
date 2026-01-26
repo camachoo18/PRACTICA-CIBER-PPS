@@ -4,13 +4,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db');
 
-
 // Almacenamiento en memoria de intentos fallidos
 const loginAttempts = new Map();
 
 // Configuración
 const MAX_ATTEMPTS = 3;
-const LOCKOUT_DURATION = 5 * 60 * 1000; // 15 minutos en milisegundos
+const LOCKOUT_DURATION = 5 * 60 * 1000; // 5 minutos
 
 function checkLoginAttempts(email) {
     const key = email.toLowerCase();
@@ -22,7 +21,6 @@ function checkLoginAttempts(email) {
     
     const attempts = loginAttempts.get(key);
     
-    // Verificar si está bloqueado
     if (attempts.lockedUntil && now < attempts.lockedUntil) {
         const remainingMinutes = Math.ceil((attempts.lockedUntil - now) / 60000);
         return {
@@ -31,7 +29,6 @@ function checkLoginAttempts(email) {
         };
     }
     
-    // Limpiar bloqueo si ya expiró
     if (attempts.lockedUntil && now >= attempts.lockedUntil) {
         attempts.count = 0;
         attempts.lockedUntil = null;
@@ -46,7 +43,6 @@ function recordFailedAttempt(email) {
     
     attempts.count++;
     
-    // Bloquear tras alcanzar el límite
     if (attempts.count >= MAX_ATTEMPTS) {
         attempts.lockedUntil = Date.now() + LOCKOUT_DURATION;
     }
@@ -67,8 +63,7 @@ setInterval(() => {
             loginAttempts.delete(email);
         }
     }
-}, 60 * 60 * 1000); // 1 hora
-
+}, 60 * 60 * 1000);
 
 // Middleware para verificar token
 function verifyToken(req, res, next) {
@@ -86,89 +81,129 @@ function verifyToken(req, res, next) {
     }
 }
 
-// Register
-router.post('/register', (req, res) => {
-    const { firstName, lastName, email, password, passwordConfirm } = req.body;
+// Register - ✅ AHORA ES ASYNC
+router.post('/register', async (req, res) => {
+    const { firstName, lastName, email, password, passwordConfirm, 'cf-turnstile-response': captchaToken } = req.body;
 
-    // Validaciones
-    if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+    // 🔒 VALIDAR CAPTCHA CON FETCH NATIVO
+    if (!captchaToken) {
         return res.status(400).json({ 
             success: false, 
-            error: 'Todos los campos son obligatorios' 
+            error: 'Por favor completa el Captcha' 
         });
     }
 
-    if (password !== passwordConfirm) {
-        return res.status(400).json({ 
-            success: false, 
-            error: 'Las contraseñas no coinciden' 
-        });
-    }
+    try {
+        // ✅ Validar Captcha con Cloudflare Turnstile
+        const captchaResponse = await fetch(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    secret: process.env.RECAPTCHA_SECRET_KEY,
+                    response: captchaToken
+                })
+            }
+        );
 
-    if (password.length < 12) {
-        return res.status(400).json({ 
-            success: false, 
-            error: 'La contraseña debe tener al menos 12 caracteres' 
-        });
-    }
+        const captchaData = await captchaResponse.json();
 
-    if (password.length > 72) {
-        return res.status(400).json({ 
-            success: false, 
-            error: 'La contraseña no puede exceder 72 caracteres' 
-        });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return res.status(400).json({ 
-            success: false, 
-            error: 'Email inválido' 
-        });
-    }
-
-    // Hashear contraseña
-    bcrypt.hash(password, 12, (err, hashedPassword) => {
-        if (err) {
-            return res.status(500).json({ 
+        if (!captchaData.success) {
+            return res.status(400).json({ 
                 success: false, 
-                error: 'Error al procesar la contraseña' 
+                error: 'Validación de Captcha fallida. Intenta nuevamente.' 
             });
         }
 
-        // Insertar usuario
-        db.run(
-            'INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
-            [firstName.trim(), lastName.trim(), email.toLowerCase(), hashedPassword],
-            function(err) {
-                if (err) {
-                    if (err.message.includes('UNIQUE constraint failed')) {
-                        return res.status(400).json({ 
-                            success: false, 
-                            error: 'El email ya está registrado' 
-                        });
-                    }
-                    return res.status(500).json({ 
-                        success: false, 
-                        error: 'Error al registrar usuario' 
-                    });
-                }
+        // Continuar con validaciones de registro
+        if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Todos los campos son obligatorios' 
+            });
+        }
 
-                const token = jwt.sign(
-                    { userId: this.lastID },
-                    process.env.JWT_SECRET,
-                    { expiresIn: '7d' }
-                );
+        if (password !== passwordConfirm) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Las contraseñas no coinciden' 
+            });
+        }
 
-                res.json({ 
-                    success: true, 
-                    message: 'Registro exitoso',
-                    token,
-                    userId: this.lastID
+        if (password.length < 12) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'La contraseña debe tener al menos 12 caracteres' 
+            });
+        }
+
+        if (password.length > 72) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'La contraseña no puede exceder 72 caracteres' 
+            });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Email inválido' 
+            });
+        }
+
+        // Hashear contraseña
+        bcrypt.hash(password, 12, (err, hashedPassword) => {
+            if (err) {
+                return res.status(500).json({ 
+                    success: false, 
+                    error: 'Error al procesar la contraseña' 
                 });
             }
-        );
-    });
+
+            db.run(
+                'INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
+                [firstName.trim(), lastName.trim(), email.toLowerCase(), hashedPassword],
+                function(err) {
+                    if (err) {
+                        if (err.message.includes('UNIQUE constraint failed')) {
+                            return res.status(400).json({ 
+                                success: false, 
+                                error: 'El email ya está registrado' 
+                            });
+                        }
+                        return res.status(500).json({ 
+                            success: false, 
+                            error: 'Error al registrar usuario' 
+                        });
+                    }
+
+                    const token = jwt.sign(
+                        { userId: this.lastID },
+                        process.env.JWT_SECRET,
+                        { expiresIn: '7d' }
+                    );
+
+                    res.json({ 
+                        success: true, 
+                        message: 'Registro exitoso',
+                        token,
+                        userId: this.lastID
+                    });
+                }
+            );
+        });
+
+    } catch (error) {
+        console.error('Error al validar Captcha:', error);
+        return res.status(500).json({ 
+            success: false, 
+            error: 'Error al validar Captcha. Intenta más tarde.' 
+        });
+    }
 });
 
 // Login
@@ -181,18 +216,16 @@ router.post('/login', (req, res) => {
             error: 'Email y contraseña requeridos' 
         });
     }
-        // Verificar intentos
-        const attemptCheck = checkLoginAttempts(email);
-            if (attemptCheck.blocked) {
-                return res.status(429).json({
-                    success: false,
-                    error: attemptCheck.message
-                });
-            }
 
+    const attemptCheck = checkLoginAttempts(email);
+    if (attemptCheck.blocked) {
+        return res.status(429).json({
+            success: false,
+            error: attemptCheck.message
+        });
+    }
 
-
-     db.get(
+    db.get(
         'SELECT * FROM users WHERE email = ?',
         [email.toLowerCase()],
         (err, user) => {
@@ -204,7 +237,6 @@ router.post('/login', (req, res) => {
             }
 
             if (!user) {
-                // REGISTRAR INTENTO FALLIDO
                 recordFailedAttempt(email);
                 return res.status(401).json({ 
                     success: false, 
@@ -221,7 +253,6 @@ router.post('/login', (req, res) => {
                 }
 
                 if (!isPasswordValid) {
-                    // REGISTRAR INTENTO FALLIDO
                     recordFailedAttempt(email);
                     return res.status(401).json({ 
                         success: false, 
@@ -229,7 +260,6 @@ router.post('/login', (req, res) => {
                     });
                 }
 
-                // LOGIN EXITOSO - RESETEAR INTENTOS
                 resetAttempts(email);
 
                 const token = jwt.sign(

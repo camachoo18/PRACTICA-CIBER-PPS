@@ -15,14 +15,25 @@ app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
-    scriptSrc: ["'self'", "'unsafe-inline'"], // unsafe-inline solo en desarrollo
+    scriptSrc: [
+      "'self'", 
+      "'unsafe-inline'",
+      "https://challenges.cloudflare.com" // ✅ AÑADIR CLOUDFLARE TURNSTILE
+    ],
     styleSrc: ["'self'", "'unsafe-inline'"],
     imgSrc: ["'self'", "data:", "https:"],
-    connectSrc: ["'self'", "http://localhost:*"],
+    connectSrc: [
+      "'self'", 
+      "http://localhost:*",
+      "https://challenges.cloudflare.com" // ✅ AÑADIR PARA API CALLS
+    ],
     fontSrc: ["'self'"],
     objectSrc: ["'none'"],
     mediaSrc: ["'self'"],
-    frameSrc: ["'none'"]
+    frameSrc: [
+      "'self'",
+      "https://challenges.cloudflare.com" // ✅ AÑADIR PARA IFRAME DEL CAPTCHA
+    ]
   }
 }));
 
