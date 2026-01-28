@@ -18,21 +18,21 @@ app.use(helmet.contentSecurityPolicy({
     scriptSrc: [
       "'self'", 
       "'unsafe-inline'",
-      "https://challenges.cloudflare.com" // ✅ AÑADIR CLOUDFLARE TURNSTILE
+      "https://challenges.cloudflare.com" // AÑADIR CLOUDFLARE TURNSTILE
     ],
     styleSrc: ["'self'", "'unsafe-inline'"],
     imgSrc: ["'self'", "data:", "https:"],
     connectSrc: [
       "'self'", 
       "http://localhost:*",
-      "https://challenges.cloudflare.com" // ✅ AÑADIR PARA API CALLS
+      "https://challenges.cloudflare.com" // añadir para aceptar cloudfare
     ],
     fontSrc: ["'self'"],
     objectSrc: ["'none'"],
     mediaSrc: ["'self'"],
     frameSrc: [
       "'self'",
-      "https://challenges.cloudflare.com" // ✅ AÑADIR PARA IFRAME DEL CAPTCHA
+      "https://challenges.cloudflare.com" // añadir para aceptar el captcha
     ]
   }
 }));
