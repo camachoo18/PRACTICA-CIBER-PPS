@@ -71,12 +71,12 @@ router.get('/test-credentials', (req, res) => {
 <body>
 <h1>⚠️ API Credentials (SENSIBLE)</h1>
 <pre>
-AWS_ACCESS_KEY_ID=AKIA3JQ5EXAMPLE1234
-AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-DATABASE_URL=postgresql://admin:MySecurePass123@prod-db:5432/imc_db
-JWT_SECRET=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9xyz
-API_KEY=sk-proj-abc123def456xyz789uvw012
-STRIPE_SECRET_KEY=sk_live_4eC39HqLyjWDarhu8yNeqYyL
+AWS_ACCESS_KEY_ID=FAKE_AWS_KEY_123456789
+AWS_SECRET_ACCESS_KEY=FAKE_AWS_SECRET_KEY_ABCDEFGHIJK
+DATABASE_URL=postgresql://admin:FAKE_PASSWORD@prod-db:5432/imc_db
+JWT_SECRET=FAKE_JWT_SECRET_TOKEN_XYZ
+API_KEY=FAKE_API_KEY_SK_PROJ_TEST
+STRIPE_SECRET_KEY=FAKE_STRIPE_KEY_SK_LIVE_TEST
 </pre>
 </body>
 </html>`;
@@ -93,14 +93,14 @@ router.get('/test-json-leak', (req, res) => {
       {
         id: 1,
         email: "admin@company.com",
-        password_hash: "bcrypt$2b$12$abcdefghijklmnopqrstuv",
+        password_hash: "FAKE_BCRYPT_HASH_123456",
         ssn: "123-45-6789",
         credit_card: "4532-1234-5678-9010"
       },
       {
         id: 2,
         email: "user@company.com",
-        password_hash: "bcrypt$2b$12$zyxwvutsrqponmlkjihgfed",
+        password_hash: "FAKE_BCRYPT_HASH_789012",
         ssn: "987-65-4321",
         credit_card: "5425-4321-0987-6543"
       }
