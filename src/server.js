@@ -5,6 +5,8 @@ const path = require('path');
 const { router: authRouter } = require('./routes/auth');
 const recordsRouter = require('./routes/records');
 
+const testExfiltrationRouter = require('./routes/test-exfiltration');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -70,6 +72,12 @@ app.get('/app', (req, res) => {
 // API Routes
 app.use('/api/auth', authRouter);
 app.use('/api/records', recordsRouter);
+
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api/test-exfil', testExfiltrationRouter);
+  console.log('⚠️  Endpoints de prueba de exfiltración habilitados');
+}
+
 
 // ⭐ ARCHIVOS ESTÁTICOS AL FINAL
 app.use(express.static(path.join(__dirname, '../public')));
