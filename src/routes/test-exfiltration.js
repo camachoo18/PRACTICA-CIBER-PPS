@@ -1,6 +1,6 @@
 /**
- * 🔴 ENDPOINTS DE PRUEBA 
-
+ * 🔴 ENDPOINTS DE PRUEBA - SOLO PARA DEMOSTRACIÓN (3.4)
+ * ⚠️ ELIMINAR EN PRODUCCIÓN
  * 
  * Propósito: Demostrar que ModSecurity bloquea respuestas
  * con información sensible (outbound filtering)
@@ -28,9 +28,9 @@ router.get('/test-db-dump', (req, res) => {
 ============================
 Table: users
 id,email,password_hash,created_at
-1,admin@example.com,sha256$abc123def456,2025-01-01 10:00:00
-2,user@example.com,sha256$xyz789uvw012,2025-01-02 11:30:00
-3,test@example.com,sha256$plaintext_pass_123,2025-01-03 14:15:00
+1,user1@test.com,hash1234567890,2025-01-01 10:00:00
+2,user2@test.com,hash0987654321,2025-01-02 11:30:00
+3,user3@test.com,hash1111111111,2025-01-03 14:15:00
 
 Table: records
 id,userId,weight,height,imc,createdAt
@@ -49,11 +49,11 @@ at connectDatabase (/app/src/database/db.js:45:12)
 at Object.<anonymous> (/app/src/server.js:12:3)
 
 Detalles de Conexión:
-- Database Host: prod-db.internal.company.com
+- Database Host: internal-server-01
 - Database Port: 5432
-- Database Name: imc_production
-- Username: admin_user
-- Password: SecurePass123!456
+- Database Name: application_db
+- Username: database_user
+- Password: MyPassword123456
 
 Stack de Conexión:
   Error: ECONNREFUSED 172.20.0.3:5432
@@ -67,17 +67,16 @@ Stack de Conexión:
 router.get('/test-credentials', (req, res) => {
   const html = `<!DOCTYPE html>
 <html>
-<head><title>API Credentials</title></head>
+<head><title>Configuration File</title></head>
 <body>
-<h1>⚠️ API Credentials (SENSIBLE)</h1>
+<h1>System Configuration</h1>
 <pre>
-AWS_ACCESS_KEY_ID=EXAMPLE_AWS_KEY_1234567890
-AWS_SECRET_ACCESS_KEY=EXAMPLE_AWS_SECRET_KEY_ABCDEFGHIJK
-DATABASE_URL=postgresql://admin:EXAMPLE_PASSWORD@prod-db:5432/imc_db
-JWT_SECRET=EXAMPLE_JWT_SECRET_TOKEN_XYZ_NOT_REAL
-API_KEY=EXAMPLE_API_KEY_NOT_REAL
-STRIPE_SECRET_KEY=DEMO_KEY_NOT_A_REAL_SECRET
-
+APPLICATION_KEY=key_application_demo_test_only
+DATABASE_PASS=password_database_demo_test_only
+API_TOKEN=token_api_demo_test_only_12345
+SERVICE_KEY=key_service_demo_test_only
+PAYMENT_KEY=key_payment_demo_test_only_67890
+WEBHOOK_SECRET=secret_webhook_demo_test_only
 </pre>
 </body>
 </html>`;
@@ -93,21 +92,21 @@ router.get('/test-json-leak', (req, res) => {
     users: [
       {
         id: 1,
-        email: "admin@company.com",
-        password_hash: "FAKE_BCRYPT_HASH_123456",
+        email: "person1@test.com",
+        password_hash: "hash_value_1234567890abcdef",
         ssn: "123-45-6789",
         credit_card: "4532-1234-5678-9010"
       },
       {
         id: 2,
-        email: "user@company.com",
-        password_hash: "FAKE_BCRYPT_HASH_789012",
+        email: "person2@test.com",
+        password_hash: "hash_value_fedcba0987654321",
         ssn: "987-65-4321",
         credit_card: "5425-4321-0987-6543"
       }
     ],
     database_version: "PostgreSQL 13.5",
-    server_path: "/var/www/app"
+    server_path: "/var/www/application"
   });
   
   res.setHeader('Content-Type', 'application/json');
@@ -118,9 +117,9 @@ router.get('/test-json-leak', (req, res) => {
 router.get('/test-sysinfo', (req, res) => {
   const sysinfo = `System Information Dump
 =======================
-OS: Linux prod-server 5.10.0-8-amd64 #1 SMP Debian
+OS: Linux server-01 5.10.0-8-amd64
 Kernel: 5.10.0-8-amd64
-Hostname: prod-db-01.internal
+Hostname: internal-server-01
 IP Address: 172.20.0.5
 Memory: 16GB
 Disk: /dev/sda1 mounted at /
@@ -133,7 +132,7 @@ Running Services:
 Installed Packages:
 node v18.0.0
 npm 8.0.0
-postgres-contrib
+postgres-tools
 redis-tools`;
   
   res.setHeader('Content-Type', 'text/plain');
