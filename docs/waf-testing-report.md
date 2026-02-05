@@ -214,5 +214,5 @@ sudo docker exec imc_waf ls -la /etc/modsecurity/crs/ | grep -E "\.conf$" | wc -
 ---
 
 **Documento generado**: 5 de febrero de 2026  
-**Responsable**: Equipo de Ciberseguridad  
-**Estado del Proyecto**: En progreso (85% completado)
+**Responsable**: Equipo D 
+
