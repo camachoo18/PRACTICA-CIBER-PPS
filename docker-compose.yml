@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    container_name: imc_app
+    networks:
+      - imcnet
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+  waf:
+    image: owasp/modsecurity-crs:apache
+    container_name: imc_waf
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      # Montamos tu config de Apache en la ruta correcta de la imagen
+      - ./infra/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      # Asegúrate de que estas carpetas existan en tu host o bórralas si no tienes reglas extra
+      - ./infra/apache/modsecurity.conf:/etc/modsecurity/modsecurity.conf:ro
+      - ./infra/apache/crs/:/etc/modsecurity/crs/:ro
+    networks:
+      - imcnet
+    restart: unless-stopped
+
+networks:
+  imcnet:
+    driver: bridge

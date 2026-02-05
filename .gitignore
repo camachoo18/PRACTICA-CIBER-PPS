@@ -1,2 +1,29 @@
 node_modules/
 .env
+# Logs y archivos temporales
+*.log
+/logs/
+/tmp/
+
+# Docker y configuración de infraestructura
+infra/apache/crs/
+.docker/
+
+# Documentos temporales
+# docs/(BORRAR)*.md
+
+# Coverage y reportes temporales
+coverage/
+.nyc_output/
+
+# IDE y editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Dependencias y build
+dist/
+build/
+.next/
