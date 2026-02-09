@@ -24,7 +24,7 @@
   "homepage": "https://github.com/camachoo18/PRACTICA-CIBER-PPS#readme",
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3"
