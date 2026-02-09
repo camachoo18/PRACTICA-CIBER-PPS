@@ -7,6 +7,9 @@ const recordsRouter = require('./routes/records');
 
 const testExfiltrationRouter = require('./routes/test-exfiltration');
 
+
+const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -20,22 +23,22 @@ app.use(helmet.contentSecurityPolicy({
     scriptSrc: [
       "'self'", 
       "'unsafe-inline'",
-      "https://challenges.cloudflare.com" // AÑADIR CLOUDFLARE TURNSTILE
+      "https://challenges.cloudflare.com"  // ✅ TURNSTILE SCRIPTS
     ],
     styleSrc: ["'self'", "'unsafe-inline'"],
     imgSrc: ["'self'", "data:", "https:"],
     connectSrc: [
       "'self'", 
       "http://localhost:*",
-      "https://challenges.cloudflare.com" // añadir para aceptar cloudfare
+      "https://challenges.cloudflare.com"  // ✅ TURNSTILE API
+    ],
+    frameSrc: [
+      "'self'",
+      "https://challenges.cloudflare.com"  // ✅ TURNSTILE IFRAME
     ],
     fontSrc: ["'self'"],
     objectSrc: ["'none'"],
-    mediaSrc: ["'self'"],
-    frameSrc: [
-      "'self'",
-      "https://challenges.cloudflare.com" // añadir para aceptar el captcha
-    ]
+    mediaSrc: ["'self'"]
   }
 }));
 
@@ -77,7 +80,6 @@ if (process.env.NODE_ENV !== 'production') {
   app.use('/api/test-exfil', testExfiltrationRouter);
   console.log('⚠️  Endpoints de prueba de exfiltración habilitados');
 }
-
 
 // ⭐ ARCHIVOS ESTÁTICOS AL FINAL
 app.use(express.static(path.join(__dirname, '../public')));

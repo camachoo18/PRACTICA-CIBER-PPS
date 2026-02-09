@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Registro de IMC</title>
     <link rel="stylesheet" href="css/auth.css">
+    <!-- ✅ CARGAR API DE TURNSTILE -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
 </head>
 <body>
-        <script>
-        // Si ya hay token, redirigir a /app
+    <script>
         if (localStorage.getItem('token')) {
             window.location.href = '/app';
         }
@@ -72,13 +71,14 @@
                         minlength="12">
                 </div>
                 
-                <!--CAPTCHA-->
+                <!-- ✅ CAPTCHA CON SITE KEY CORRECTO -->
                 <div class="cf-turnstile" 
                      data-sitekey="0x4AAAAAACSJOvggfQ3wY6dP"
-                     data-theme="light">
+                     data-theme="light"
+                     data-size="normal">
                 </div>
 
-        <button type="submit" class="btn-primary">Registrarse</button>
+                <button type="submit" class="btn-primary">Registrarse</button>
             </form>
             
             <div id="errorMessage" class="error-message"></div>

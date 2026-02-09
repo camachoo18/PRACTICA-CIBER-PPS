@@ -10,11 +10,24 @@ form.addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
     
-    // OBTENER TOKEN DE TURNSTILE
-    const captchaToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+    // ✅ OBTENER TOKEN DE TURNSTILE CORRECTAMENTE
+    const captchaToken = window.turnstile?.getResponse();
     
     if (!captchaToken) {
         errorMessage.textContent = 'Por favor completa el Captcha';
+        errorMessage.classList.add('show');
+        return;
+    }
+
+    // Validaciones básicas
+    if (password !== passwordConfirm) {
+        errorMessage.textContent = 'Las contraseñas no coinciden';
+        errorMessage.classList.add('show');
+        return;
+    }
+
+    if (password.length < 12) {
+        errorMessage.textContent = 'La contraseña debe tener al menos 12 caracteres';
         errorMessage.classList.add('show');
         return;
     }
@@ -31,7 +44,7 @@ form.addEventListener('submit', async (e) => {
                 email, 
                 password, 
                 passwordConfirm,
-                'cf-turnstile-response': captchaToken  // ENVIAR TOKEN
+                'cf-turnstile-response': captchaToken  // ✅ ENVIAR CORRECTAMENTE
             })
         });
         
@@ -41,11 +54,15 @@ form.addEventListener('submit', async (e) => {
             localStorage.setItem('token', data.token);
             window.location.href = '/app';
         } else {
-            errorMessage.textContent = data.error;
+            errorMessage.textContent = data.error || 'Error en el registro';
             errorMessage.classList.add('show');
+            // ✅ RESET TURNSTILE DESPUÉS DE ERROR
+            window.turnstile?.reset();
         }
     } catch (error) {
+        console.error('Error:', error);
         errorMessage.textContent = 'Error de conexión';
         errorMessage.classList.add('show');
+        window.turnstile?.reset();
     }
 });

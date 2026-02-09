@@ -81,11 +81,18 @@ function verifyToken(req, res, next) {
     }
 }
 
-// Register - ✅ AHORA ES ASYNC
+// Register - ✅ VALIDAR CAPTCHA CON SECRET KEY
 router.post('/register', async (req, res) => {
-    const { firstName, lastName, email, password, passwordConfirm, 'cf-turnstile-response': captchaToken } = req.body;
+    const { 
+        firstName, 
+        lastName, 
+        email, 
+        password, 
+        passwordConfirm, 
+        'cf-turnstile-response': captchaToken 
+    } = req.body;
 
-    // 🔒 VALIDAR CAPTCHA CON FETCH NATIVO
+    // 🔒 VALIDAR QUE CAPTCHA ESTÉ PRESENTE
     if (!captchaToken) {
         return res.status(400).json({ 
             success: false, 
@@ -94,7 +101,7 @@ router.post('/register', async (req, res) => {
     }
 
     try {
-        // ✅ Validar Captcha con Cloudflare Turnstile
+        // ✅ VALIDAR CON CLOUDFLARE USANDO SECRET KEY
         const captchaResponse = await fetch(
             'https://challenges.cloudflare.com/turnstile/v0/siteverify',
             {
@@ -103,7 +110,7 @@ router.post('/register', async (req, res) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    secret: process.env.RECAPTCHA_SECRET_KEY,
+                    secret: process.env.RECAPTCHA_SECRET_KEY,  // ✅ SECRET KEY DEL .env
                     response: captchaToken
                 })
             }
@@ -111,18 +118,26 @@ router.post('/register', async (req, res) => {
 
         const captchaData = await captchaResponse.json();
 
+        console.log('🔍 Respuesta Captcha:', {
+            success: captchaData.success,
+            score: captchaData.score,
+            error_codes: captchaData['error-codes']
+        });
+
+        // ✅ VERIFICAR RESULTADO DEL CAPTCHA
         if (!captchaData.success) {
+            console.warn('⚠️ Captcha fallido:', captchaData['error-codes']);
             return res.status(400).json({ 
                 success: false, 
-                error: 'Validación de Captcha fallida. Intenta nuevamente.' 
+                error: 'Validación de Captcha fallida. Por favor intenta de nuevo.' 
             });
         }
 
-        // Continuar con validaciones de registro
-        if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+        // Validaciones de contraseña
+        if (!password || !passwordConfirm) {
             return res.status(400).json({ 
                 success: false, 
-                error: 'Todos los campos son obligatorios' 
+                error: 'Contraseña requerida' 
             });
         }
 
@@ -133,20 +148,14 @@ router.post('/register', async (req, res) => {
             });
         }
 
-        if (password.length < 12) {
+        if (password.length < 12 || password.length > 72) {
             return res.status(400).json({ 
                 success: false, 
-                error: 'La contraseña debe tener al menos 12 caracteres' 
+                error: 'La contraseña debe tener entre 12 y 72 caracteres' 
             });
         }
 
-        if (password.length > 72) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'La contraseña no puede exceder 72 caracteres' 
-            });
-        }
-
+        // Validar email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ 
@@ -155,9 +164,18 @@ router.post('/register', async (req, res) => {
             });
         }
 
+        // Validar nombres
+        if (!firstName || !lastName) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Nombre y apellido requeridos' 
+            });
+        }
+
         // Hashear contraseña
         bcrypt.hash(password, 12, (err, hashedPassword) => {
             if (err) {
+                console.error('Error hashing:', err);
                 return res.status(500).json({ 
                     success: false, 
                     error: 'Error al procesar la contraseña' 
@@ -175,6 +193,7 @@ router.post('/register', async (req, res) => {
                                 error: 'El email ya está registrado' 
                             });
                         }
+                        console.error('Error inserción BD:', err);
                         return res.status(500).json({ 
                             success: false, 
                             error: 'Error al registrar usuario' 
@@ -187,6 +206,7 @@ router.post('/register', async (req, res) => {
                         { expiresIn: '7d' }
                     );
 
+                    console.log('✅ Usuario registrado:', email);
                     res.json({ 
                         success: true, 
                         message: 'Registro exitoso',
@@ -198,7 +218,7 @@ router.post('/register', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error al validar Captcha:', error);
+        console.error('❌ Error validando Captcha:', error);
         return res.status(500).json({ 
             success: false, 
             error: 'Error al validar Captcha. Intenta más tarde.' 

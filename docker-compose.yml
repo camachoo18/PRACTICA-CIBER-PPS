@@ -1,32 +1,37 @@
-version: '3.8'
 services:
   app:
     build: .
-    container_name: imc_app
-    networks:
-      - imcnet
+    ports:
+      - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - JWT_SECRET=${JWT_SECRET}
+      - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
+    volumes:
+      - ./data:/app/data
+    networks:
+      - imc-network
 
   waf:
     image: owasp/modsecurity-crs:apache
-    container_name: imc_waf
-    depends_on:
-      - app
     ports:
       - "80:80"
-      
+      - "443:443"
+    environment:
+      - PARANOIA=1
+      - ANOMALY_INBOUND=10
+      - ANOMALY_OUTBOUND=8
     volumes:
-      # Montamos tu config de Apache en la ruta correcta de la imagen
       - ./infra/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
-      # Asegúrate de que estas carpetas existan en tu host o bórralas si no tienes reglas extra
       - ./infra/apache/modsecurity.conf:/etc/modsecurity/modsecurity.conf:ro
-      - ./infra/apache/crs/:/etc/modsecurity/crs/:ro
+      - ./infra/apache/custom-exclusions.conf:/etc/modsecurity/custom-exclusions.conf:ro
     networks:
-      - imcnet
-    restart: unless-stopped
+      - imc-network
+    depends_on:
+      app:
+        condition: service_started
 
 networks:
-  imcnet:
+  imc-network:
     driver: bridge
