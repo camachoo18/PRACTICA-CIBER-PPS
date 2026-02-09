@@ -24,6 +24,7 @@ cat > .env << 'EOF'
 JWT_SECRET=${JWT_SECRET}
 PORT=3000
 NODE_ENV=development
+RECAPTCHA_SECRET_KEY=0x4AAAAAACSJOlBVABMINsucBKvxKdwnj9g
 EOF
 
 if [ -f .env ]; then
