@@ -1,4 +1,4 @@
-# 3.5. Informe de Pruebas y Conclusiones
+# Informe de Pruebas y Conclusiones del WAF
 
 **Fecha de elaboración**: 5 de febrero de 2026  
 **Proyecto**: Sistema de Registro IMC con WAF ModSecurity  
