@@ -16,6 +16,7 @@ services:
       - app
     ports:
       - "80:80"
+      
     volumes:
       # Montamos tu config de Apache en la ruta correcta de la imagen
       - ./infra/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro

@@ -10,13 +10,29 @@ form.addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
     
+    // OBTENER TOKEN DE TURNSTILE
+    const captchaToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+    
+    if (!captchaToken) {
+        errorMessage.textContent = 'Por favor completa el Captcha';
+        errorMessage.classList.add('show');
+        return;
+    }
+    
     try {
         const response = await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ firstName, lastName, email, password, passwordConfirm })
+            body: JSON.stringify({ 
+                firstName, 
+                lastName, 
+                email, 
+                password, 
+                passwordConfirm,
+                'cf-turnstile-response': captchaToken  // ENVIAR TOKEN
+            })
         });
         
         const data = await response.json();
