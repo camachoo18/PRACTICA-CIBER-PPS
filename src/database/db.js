@@ -14,7 +14,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 function initializeDatabase() {
     db.serialize(() => {
-        // Tabla de usuarios
+        // Tabla de usuarios 
         db.run(`
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,9 +22,11 @@ function initializeDatabase() {
                 lastName TEXT NOT NULL,
                 email TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
+                role TEXT DEFAULT 'user' NOT NULL,
                 createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         `);
+
 
         // Tabla de registros IMC
 db.run(`

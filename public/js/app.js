@@ -20,6 +20,22 @@ if (logoutBtn) {
         window.location.href = '/login';
     });
 }
+const user = JSON.parse(localStorage.getItem('user'));
+
+// Agregar en el navbar cuando se carga la página
+document.addEventListener('DOMContentLoaded', () => {
+    // Si es admin, mostrar link a dashboard
+    if (user && user.role === 'admin') {
+        const navbarRight = document.querySelector('.navbar-right');
+        const adminLink = document.createElement('a');
+        adminLink.href = '/admin';
+        adminLink.textContent = '⚙️ Dashboard Admin';
+        adminLink.style.color = '#ff6b6b';
+        adminLink.style.fontWeight = 'bold';
+        navbarRight.insertBefore(adminLink, navbarRight.firstChild);
+    }
+});
+
 
 // Función para calcular edad
 function calculateAge(birthDate) {

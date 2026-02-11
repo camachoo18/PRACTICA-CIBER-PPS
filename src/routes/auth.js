@@ -182,40 +182,40 @@ router.post('/register', async (req, res) => {
                 });
             }
 
-            db.run(
-                'INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
-                [firstName.trim(), lastName.trim(), email.toLowerCase(), hashedPassword],
-                function(err) {
-                    if (err) {
-                        if (err.message.includes('UNIQUE constraint failed')) {
-                            return res.status(400).json({ 
-                                success: false, 
-                                error: 'El email ya está registrado' 
-                            });
-                        }
-                        console.error('Error inserción BD:', err);
-                        return res.status(500).json({ 
+        db.run(
+            'INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)',
+            [firstName.trim(), lastName.trim(), email.toLowerCase(), hashedPassword, 'user'],
+            function(err) {
+                if (err) {
+                    if (err.message.includes('UNIQUE constraint failed')) {
+                        return res.status(400).json({ 
                             success: false, 
-                            error: 'Error al registrar usuario' 
+                            error: 'El email ya está registrado' 
                         });
                     }
-
-                    const token = jwt.sign(
-                        { userId: this.lastID },
-                        process.env.JWT_SECRET,
-                        { expiresIn: '7d' }
-                    );
-
-                    console.log('✅ Usuario registrado:', email);
-                    res.json({ 
-                        success: true, 
-                        message: 'Registro exitoso',
-                        token,
-                        userId: this.lastID
+                    console.error('Error inserción BD:', err);
+                    return res.status(500).json({ 
+                        success: false, 
+                        error: 'Error al registrar usuario' 
                     });
                 }
-            );
-        });
+
+                const token = jwt.sign(
+                    { userId: this.lastID },
+                    process.env.JWT_SECRET,
+                    { expiresIn: '7d' }
+                );
+
+                res.json({ 
+                    success: true, 
+                    message: 'Registro exitoso',
+                    token,
+                    userId: this.lastID,
+                    role: 'user'  // ENVIAR ROLE
+                });
+            }
+        );
+    });
 
     } catch (error) {
         console.error('❌ Error validando Captcha:', error);
@@ -296,7 +296,8 @@ router.post('/login', (req, res) => {
                         id: user.id,
                         firstName: user.firstName,
                         lastName: user.lastName,
-                        email: user.email
+                        email: user.email,
+                        role: user.role  // ENVIAR rol
                     }
                 });
             });
