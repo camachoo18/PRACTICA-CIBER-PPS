@@ -30,7 +30,7 @@
     "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
-    "chromedriver": "^143.0.4",
+    "chromedriver": "^145.0.3",
     "cypress": "^15.8.2",
     "jest": "^30.2.0",
     "mocha": "^11.3.0",
