@@ -1,15 +1,18 @@
+version: '3.8'
+
 services:
   app:
     build: .
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=3000
       - JWT_SECRET=${JWT_SECRET}
       - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
     volumes:
-      - ./data:/app/data
+      - .:/app
+      - /app/node_modules
     networks:
       - imc-network
 
@@ -19,9 +22,9 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - PARANOIA=1
-      - ANOMALY_INBOUND=10
-      - ANOMALY_OUTBOUND=8
+      - PARANOIA=3
+      - ANOMALY_INBOUND=1
+      - ANOMALY_OUTBOUND=4
     volumes:
       - ./infra/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
       - ./infra/apache/modsecurity.conf:/etc/modsecurity/modsecurity.conf:ro

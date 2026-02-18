@@ -21,7 +21,7 @@ JWT_SECRET=$(openssl rand -hex 32)
 
 
 cat > .env << 'EOF'
-JWT_SECRET=${JWT_SECRET}
+JWT_SECRET=abc123def456xyz789abc123def456xyz789abc123def456xyz789abc123def
 PORT=3000
 NODE_ENV=development
 RECAPTCHA_SECRET_KEY=0x4AAAAAACSJOlBVABMINsucBKvxKdwnj9g

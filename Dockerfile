@@ -1,6 +1,7 @@
 FROM node:18-bullseye-slim
 WORKDIR /app
 COPY package*.json ./
+COPY .env .env
 RUN apt-get update && \
     apt-get install -y python3 build-essential libsqlite3-dev ca-certificates && \
     npm ci --only=production && \
@@ -8,5 +9,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 COPY . .
 ENV PORT=3000
+ENV NODE_ENV=development
 EXPOSE 3000
 CMD ["npm", "start"]

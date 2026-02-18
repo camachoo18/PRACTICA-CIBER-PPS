@@ -1,4 +1,8 @@
 require('dotenv').config();
+
+// ✅ DEBUG: Verifica que se cargó correctamente
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? '✅ Cargado' : '❌ NO CARGADO');
+console.log('NODE_ENV:', process.env.NODE_ENV);
 const express = require('express');
 const helmet = require ('helmet');
 const path = require('path');
@@ -73,6 +77,14 @@ app.get('/app', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
+app.get('/test-waf', (req, res) => {
+    const { payload } = req.query;
+    res.json({ 
+        test: 'WAF endpoint público',
+        received: payload || 'sin payload'
+    });
+});
+
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/admin.html'));
 });
@@ -80,10 +92,10 @@ app.get('/admin', (req, res) => {
 // API Routes
 app.use('/api/auth', authRouter);
 app.use('/api/records', recordsRouter);
-app.use('/api/admin', adminRouter);  // Rutas de administración
+app.use('/api/admin', adminRouter);
 
 if (process.env.NODE_ENV !== 'production') {
-  app.use('/api/test-exfil', testExfiltrationRouter);
+  app.use('/api/test-exfil', testExfiltrationRouter);  // ✅ IMPORTANTE
   console.log('⚠️  Endpoints de prueba de exfiltración habilitados');
 }
 
