@@ -3,6 +3,48 @@ const router = express.Router();
 const db = require('../database/db');
 const { verifyToken } = require('./auth');
 
+
+/**
+ * @swagger
+ * /api/records:
+ *   get:
+ *     summary: Obtener registros del usuario autenticado
+ *     description: Retorna todos los registros IMC del usuario autenticado, ordenados por fecha descendente
+ *     tags:
+ *       - Registros IMC
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Registros obtenidos exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 records:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Record'
+ *       401:
+ *         description: No autenticado - Token requerido o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               success: false
+ *               error: Token requerido
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 // GET - Obtener registros del usuario autenticado
 router.get('/', verifyToken, (req, res) => {
     db.all(
@@ -19,6 +61,112 @@ router.get('/', verifyToken, (req, res) => {
         }
     );
 });
+
+/**
+ * @swagger
+ * /api/records:
+ *   post:
+ *     summary: Crear nuevo registro de IMC
+ *     description: Calcula y guarda un nuevo registro de IMC para el usuario autenticado
+ *     tags:
+ *       - Registros IMC
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - birthDate
+ *               - weight
+ *               - height
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 100
+ *                 example: José María
+ *               lastName:
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 100
+ *                 example: López Martínez
+ *               birthDate:
+ *                 type: string
+ *                 format: date
+ *                 example: '1990-01-15'
+ *               weight:
+ *                 type: number
+ *                 minimum: 0.1
+ *                 maximum: 300
+ *                 example: 75.5
+ *                 description: Peso en kilogramos
+ *               height:
+ *                 type: number
+ *                 minimum: 50
+ *                 maximum: 250
+ *                 example: 182.5
+ *                 description: Altura en centímetros
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 example: '2025-02-05'
+ *                 description: Fecha del registro (opcional, se usa la fecha actual si no se proporciona)
+ *     responses:
+ *       200:
+ *         description: Registro creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 record:
+ *                   $ref: '#/components/schemas/Record'
+ *       400:
+ *         description: Error de validación - Campos inválidos o faltantes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               missing_fields:
+ *                 summary: Campos obligatorios faltantes
+ *                 value:
+ *                   success: false
+ *                   error: Todos los campos son obligatorios
+ *               invalid_weight:
+ *                 summary: Peso inválido
+ *                 value:
+ *                   success: false
+ *                   error: El peso debe ser mayor a 0
+ *               invalid_height:
+ *                 summary: Altura inválida
+ *                 value:
+ *                   success: false
+ *                   error: La altura debe estar entre 50 y 250 cm
+ *       401:
+ *         description: No autenticado - Token requerido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               success: false
+ *               error: Error al guardar el registro
+ */
 
 // POST - Crear nuevo registro
 router.post('/', verifyToken, (req, res) => {

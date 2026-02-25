@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "Sistema de registro de IMC",
   "main": "src/server.js",
-  "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "coverage:open": "npm run test:coverage && start coverage/index.html"
-  },
+"scripts": {
+  "start": "node src/server.js",
+  "dev": "nodemon src/server.js",
+  "test": "jest",
+  "test:watch": "jest --watch",
+  "test:coverage": "jest --coverage",
+  "coverage:open": "npm run test:coverage && start coverage/index.html"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/camachoo18/PRACTICA-CIBER-PPS.git"
@@ -27,7 +27,9 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "chromedriver": "^143.0.4",

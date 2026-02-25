@@ -7,7 +7,7 @@ const db = require('../database/db');
 // Almacenamiento en memoria de intentos fallidos
 const loginAttempts = new Map();
 
-// Configuración
+// Configuración rete limit
 const MAX_ATTEMPTS = 3;
 const LOCKOUT_DURATION = 5 * 60 * 1000; // 5 minutos
 
@@ -81,7 +81,118 @@ function verifyToken(req, res, next) {
     }
 }
 
-// Register - ✅ VALIDAR CAPTCHA CON SECRET KEY
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Registrar nuevo usuario
+ *     description: Crea una nueva cuenta de usuario con validación de CAPTCHA Turnstile
+ *     tags:
+ *       - Autenticación
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - email
+ *               - password
+ *               - passwordConfirm
+ *               - cf-turnstile-response
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 100
+ *                 example: José
+ *               lastName:
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 100
+ *                 example: López
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: usuario@example.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 12
+ *                 maxLength: 72
+ *                 description: Mínimo 12 caracteres
+ *                 example: MiContraseña123456
+ *               passwordConfirm:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 12
+ *                 maxLength: 72
+ *                 example: MiContraseña123456
+ *               cf-turnstile-response:
+ *                 type: string
+ *                 description: Token de CAPTCHA Cloudflare Turnstile
+ *                 example: 0x4AAAAAACSJOl...
+ *     responses:
+ *       200:
+ *         description: Usuario registrado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Registro exitoso
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 userId:
+ *                   type: integer
+ *                   example: 1
+ *                 role:
+ *                   type: string
+ *                   example: user
+ *       400:
+ *         description: Error de validación o datos inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               captcha_missing:
+ *                 summary: CAPTCHA requerido
+ *                 value:
+ *                   success: false
+ *                   error: Por favor completa el Captcha
+ *               password_mismatch:
+ *                 summary: Contraseñas no coinciden
+ *                 value:
+ *                   success: false
+ *                   error: Las contraseñas no coinciden
+ *               email_exists:
+ *                 summary: Email ya registrado
+ *                 value:
+ *                   success: false
+ *                   error: El email ya está registrado
+ *               invalid_password:
+ *                 summary: Contraseña muy corta
+ *                 value:
+ *                   success: false
+ *                   error: La contraseña debe tener entre 12 y 72 caracteres
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+
+// Register - VALIDAR CAPTCHA CON SECRET KEY
 router.post('/register', async (req, res) => {
     const { 
         firstName, 
@@ -92,7 +203,7 @@ router.post('/register', async (req, res) => {
         'cf-turnstile-response': captchaToken 
     } = req.body;
 
-    // 🔒 VALIDAR QUE CAPTCHA ESTÉ PRESENTE
+    // VALIDAR QUE CAPTCHA ESTÉ PRESENTE
     if (!captchaToken) {
         return res.status(400).json({ 
             success: false, 
@@ -101,7 +212,7 @@ router.post('/register', async (req, res) => {
     }
 
     try {
-        // ✅ VALIDAR CON CLOUDFLARE USANDO SECRET KEY
+        //  VALIDAR CON CLOUDFLARE USANDO SECRET KEY
         const captchaResponse = await fetch(
             'https://challenges.cloudflare.com/turnstile/v0/siteverify',
             {
@@ -110,7 +221,7 @@ router.post('/register', async (req, res) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    secret: process.env.RECAPTCHA_SECRET_KEY,  // ✅ SECRET KEY DEL .env
+                    secret: process.env.RECAPTCHA_SECRET_KEY,  // SECRET KEY DEL .env
                     response: captchaToken
                 })
             }
@@ -124,7 +235,7 @@ router.post('/register', async (req, res) => {
             error_codes: captchaData['error-codes']
         });
 
-        // ✅ VERIFICAR RESULTADO DEL CAPTCHA
+        // VERIFICAR RESULTADO DEL CAPTCHA
         if (!captchaData.success) {
             console.warn('⚠️ Captcha fallido:', captchaData['error-codes']);
             return res.status(400).json({ 
@@ -225,6 +336,87 @@ router.post('/register', async (req, res) => {
         });
     }
 });
+
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Iniciar sesión
+ *     description: Autentica un usuario y retorna un token JWT válido por 7 días
+ *     tags:
+ *       - Autenticación
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: usuario@example.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: MiContraseña123456
+ *     responses:
+ *       200:
+ *         description: Login exitoso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Login exitoso
+ *                 token:
+ *                   type: string
+ *                   description: JWT token válido por 7 días
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Datos inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               success: false
+ *               error: Email y contraseña requeridos
+ *       401:
+ *         description: Credenciales inválidas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               success: false
+ *               error: Email o contraseña incorrectos
+ *       429:
+ *         description: Demasiados intentos fallidos (Rate limiting - 3 intentos en 5 minutos)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               success: false
+ *               error: Demasiados intentos. Intenta de nuevo en 5 minutos
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 
 // Login
 router.post('/login', (req, res) => {
