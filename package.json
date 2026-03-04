@@ -6,9 +6,9 @@
 "scripts": {
   "start": "node src/server.js",
   "dev": "nodemon src/server.js",
-  "test": "jest",
+  "test": "jest --testPathIgnorePatterns=api.tests.js,records.whitebox.tests.js",
+  "test:coverage": "jest --coverage --testPathIgnorePatterns=api.tests.js,records.whitebox.tests.js",
   "test:watch": "jest --watch",
-  "test:coverage": "jest --coverage",
   "coverage:open": "npm run test:coverage && start coverage/index.html"
 },
   "repository": {
