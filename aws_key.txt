@@ -1,0 +1,8 @@
+# Archivo de configuración de prueba para la actividad de Seguridad
+# IMPORTANTE: Estas claves son falsas, solo sirven para testear el Push Protection
+
+AWS_ACCESS_KEY_ID = "AKIAIMNO88SAD7EXAMPLE"
+AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+
+def conectar_api():
+    print("Conectando con las credenciales de AWS...")
