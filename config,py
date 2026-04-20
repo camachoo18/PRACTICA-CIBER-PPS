@@ -1,0 +1,7 @@
+# config.py - Prueba de Secret Scanning
+# Este es un token de OpenAI simulado para la tarea
+
+OPENAI_API_KEY = "sk-U0123456789abcdef0123456789abcdef0123456789abc"
+
+def inicializar_bot():
+    print("Iniciando bot con la clave configurada...")
