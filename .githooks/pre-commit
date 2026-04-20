@@ -1,0 +1,37 @@
+#!/bin/bash
+# Pre-commit hook para ejecutar Gitleaks localmente
+
+echo "🔍 Ejecutando Gitleaks..."
+
+# Instalar gitleaks si no existe
+if ! command -v gitleaks &> /dev/null; then
+    echo "📦 Instalando Gitleaks..."
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        curl https://raw.githubusercontent.com/gitleaks/gitleaks/master/install.sh | bash
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        brew install gitleaks
+    elif [[ "$OSTYPE" == "msys" ]]; then
+        echo "⚠️  Por favor, instala Gitleaks desde: https://github.com/gitleaks/gitleaks"
+        exit 1
+    fi
+fi
+
+# Ejecutar Gitleaks con reglas default (más confiables)
+gitleaks detect \
+    --verbose \
+    --redact
+
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo ""
+    echo "❌ Gitleaks detectó secretos potenciales"
+    echo "🔒 Revisa tu código antes de hacer commit"
+    echo ""
+    echo "💡 Para hacer bypass temporal (NO RECOMENDADO):"
+    echo "   git commit --no-verify"
+    exit 1
+fi
+
+echo "✅ Gitleaks: No se detectaron secretos"
+exit 0
