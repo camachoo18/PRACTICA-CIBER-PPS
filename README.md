@@ -5,7 +5,7 @@
 ![coverage](./coverage/badge.svg) 
 
 
-## 🚀 Instrucciones de Ejecución
+## Instrucciones de Ejecución
 
 ### Prerrequisitos
 
@@ -69,7 +69,7 @@ Servidor corriendo en http://localhost:3000
 Se han implementado **pruebas unitarias** que garantizan la calidad del código y su correcto funcionamiento.  
 Estas pruebas cubren tres tipos principales de casos:
 
-### ✅ Casos Normales
+### Casos Normales
 Verifican el comportamiento esperado con **entradas válidas**.  
 Ejemplo: cálculos correctos del IMC, validaciones de edad y respuestas HTTP válidas.
 
@@ -77,13 +77,13 @@ Ejemplo: cálculos correctos del IMC, validaciones de edad y respuestas HTTP vá
 Comprueban el funcionamiento en los **bordes de los rangos válidos**.  
 Ejemplo: valores mínimos y máximos de peso y altura, límites exactos de categorías IMC.
 
-### ❌ Errores Esperados
+### Errores Esperados
 Evalúan el manejo de **entradas inválidas o excepciones**.  
 Ejemplo: valores nulos, negativos, no numéricos o formatos incorrectos.
 
 ---
 
-### 🚀 Ejecución de Pruebas
+### Ejecución de Pruebas
 
 Para ejecutar todas las pruebas unitarias del proyecto:
 
