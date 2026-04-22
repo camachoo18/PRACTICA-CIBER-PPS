@@ -1,5 +1,4 @@
-# Configuración de Semgrep para el proyecto
-# Última actualización: 5 de febrero de 2026
+
 
 rules:
   # SEGURIDAD CRÍTICA
