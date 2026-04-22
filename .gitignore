@@ -27,3 +27,8 @@ coverage/
 dist/
 build/
 .next/
+
+# Semgrep
+semgrep-report.json
+.semgrep_cache/
+semgrep.sarif

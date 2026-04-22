@@ -9,7 +9,12 @@
   "test": "jest --testPathIgnorePatterns=api.tests.js,records.whitebox.tests.js",
   "test:coverage": "jest --coverage --testPathIgnorePatterns=api.tests.js,records.whitebox.tests.js",
   "test:watch": "jest --watch",
-  "coverage:open": "npm run test:coverage && start coverage/index.html"
+  "coverage:open": "npm run test:coverage && start coverage/index.html",
+  "semgrep:check": "semgrep --config .semgrep.yml --json src/",
+  "semgrep:fix": "semgrep --config .semgrep.yml --json --output semgrep-report.json src/",
+  "semgrep:report": "npm run semgrep:fix && echo '✅ Reporte generado en semgrep-report.json'",
+  "security:check": "npm run semgrep:check && npm run gitleaks:check",
+  "gitleaks:check": "gitleaks detect --verbose --redact"
 },
   "repository": {
     "type": "git",

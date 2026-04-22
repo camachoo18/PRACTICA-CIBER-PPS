@@ -1,0 +1,160 @@
+# Configuración de Semgrep para el proyecto
+# Última actualización: 5 de febrero de 2026
+
+rules:
+  # SEGURIDAD CRÍTICA
+  - id: jwt_secret_hardcoded
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern: $SECRET = "..."
+              - metavariable-regex:
+                  metavariable: $SECRET
+                  regex: (JWT_SECRET|SECRET|API_KEY|PASSWORD)
+          - pattern: jwt.sign(..., "...", ...)
+    message: "JWT_SECRET o credenciales hardcodeadas detectadas"
+    languages: [javascript]
+    severity: CRITICAL
+    fix: "Usar process.env.JWT_SECRET en su lugar"
+
+  # INYECCIÓN SQL
+  - id: sql_injection_sqlite
+    patterns:
+      - pattern: |
+          db.run("SELECT ... " + $VAR + " ...")
+      - pattern: |
+          db.get("SELECT ... " + $VAR + " ...")
+    message: "Posible SQL Injection: concatenación de strings en query"
+    languages: [javascript]
+    severity: CRITICAL
+    fix: "Usar placeholders (?) en lugar de concatenación"
+
+  # INYECCIÓN XSS
+  - id: xss_innerHTML
+    patterns:
+      - pattern: |
+          $ELEM.innerHTML = $DATA
+      - pattern: |
+          $ELEM.innerHTML = $DATA + ...
+    message: "Posible XSS: innerHTML con datos no validados"
+    languages: [javascript]
+    severity: HIGH
+    fix: "Usar textContent o escapeHTML() en su lugar"
+
+  # AUTENTICACIÓN DÉBIL
+  - id: weak_crypto_md5
+    patterns:
+      - pattern-either:
+          - pattern: crypto.createHash("md5")
+          - pattern: crypto.createHash("sha1")
+    message: "MD5/SHA1 son algoritmos débiles para hashing"
+    languages: [javascript]
+    severity: HIGH
+    fix: "Usar bcrypt o argon2 para contraseñas"
+
+  # GESTIÓN DE DEPENDENCIAS
+  - id: missing_input_validation
+    patterns:
+      - pattern: |
+          $VAR = $REQ.body.$FIELD
+      - pattern-not: |
+          if ($VAR) { ... }
+      - pattern-not: |
+          if ($VAR && ...) { ... }
+    message: "Campo del body no validado antes de uso"
+    languages: [javascript]
+    severity: MEDIUM
+    fix: "Añadir validación: if (!$VAR) return error"
+
+  # INFORMACIÓN SENSIBLE
+  - id: console_log_sensitive
+    patterns:
+      - pattern-either:
+          - pattern: console.log($PASS)
+          - pattern: console.log("...", $KEY)
+      - metavariable-regex:
+          metavariable: $PASS
+          regex: (password|token|secret|key|credential)
+    message: "Logging de información sensible detectado"
+    languages: [javascript]
+    severity: MEDIUM
+    fix: "Remover console.log de datos sensibles"
+
+  # GESTIÓN DE ERRORES
+  - id: missing_error_handling
+    patterns:
+      - pattern: |
+          try {
+            ...
+          } catch (e) {
+            // commented or empty
+          }
+    message: "Bloque catch vacío o sin manejo de errores"
+    languages: [javascript]
+    severity: LOW
+    fix: "Implementar manejo de errores apropriado"
+
+  # DEPENDENCIAS VULNERABLES
+  - id: insecure_random
+    patterns:
+      - pattern-either:
+          - pattern: Math.random()
+          - pattern: Math.random() * ...
+    message: "Math.random() no es criptográficamente seguro"
+    languages: [javascript]
+    severity: MEDIUM
+    fix: "Usar crypto.randomBytes() en su lugar"
+
+  # VALIDACIÓN DE RUTAS
+  - id: path_traversal_risk
+    patterns:
+      - pattern: |
+          fs.readFile($PATH, ...)
+      - pattern: |
+          path.join($DIR, $USERINPUT, ...)
+      - pattern-not: |
+          path.resolve($DIR)
+    message: "Posible Path Traversal: validar entrada de usuario"
+    languages: [javascript]
+    severity: HIGH
+    fix: "Usar path.resolve() y validar que no suba de directorio"
+
+  # CORS
+  - id: cors_allow_all
+    patterns:
+      - pattern: |
+          cors({ origin: "*" })
+      - pattern: |
+          app.use(cors({ origin: true }))
+    message: "CORS demasiado permisivo (acepta cualquier origen)"
+    languages: [javascript]
+    severity: MEDIUM
+    fix: "Especificar origins permitidos en whitelist"
+
+  # RATE LIMITING
+  - id: missing_rate_limit
+    patterns:
+      - pattern: |
+          router.post($PATH, $MIDDLEWARE, ...)
+      - pattern-not: |
+          rateLimit(...)
+      - pattern-not: |
+          limiter.use(...)
+    message: "Endpoint POST sin rate limiting"
+    languages: [javascript]
+    severity: MEDIUM
+    fix: "Añadir rate limiting con express-rate-limit"
+
+  # VALIDACIÓN DE EMAILS
+  - id: weak_email_validation
+    patterns:
+      - pattern: |
+          $EMAIL = $REQ.body.email
+      - pattern-not: |
+          EMAIL_REGEX.test($EMAIL)
+      - pattern-not: |
+          validator.isEmail($EMAIL)
+    message: "Email sin validación propria"
+    languages: [javascript]
+    severity: LOW
+    fix: "Validar email antes de usar"

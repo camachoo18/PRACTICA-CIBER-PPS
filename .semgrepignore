@@ -1,0 +1,31 @@
+# Archivos a ignorar en análisis de Semgrep
+
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+# Cobertura y reportes
+coverage/
+.nyc_output/
+
+# Archivos de prueba (si contienen datos de ejemplo)
+tests/
+cypress/
+
+# Documentación
+docs/
+
+# Compilados
+dist/
+build/
+
+# Configuración de infraestructura específica
+infra/
+
+# Reportes gitleaks
+gitleaks-report.json
+
+# Variables de entorno
+.env
+.env.local
