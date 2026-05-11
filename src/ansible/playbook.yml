@@ -1,0 +1,21 @@
+---
+- hosts: app_servers
+  vars:
+    app_repo: "https://github.com/camachoo18/PRACTICA-CIBER-PPS.git"
+    app_directory: "/opt/practica-ciber-pps"
+    app_user: "app"
+    app_port: 3000
+  
+  roles:
+    - system
+    - nodejs
+    - app
+
+  post_tasks:
+    - name: "📊 Resumen de la instalación"
+      debug:
+        msg:
+          - "✅ Instalación completada exitosamente"
+          - "📍 Aplicación ubicada en: {{ app_directory }}"
+          - "🌐 Accesible en: http://{{ ansible_default_ipv4.address }}:{{ app_port }}"
+          - "⚙️ Servicio: systemctl start practica-ciber-pps"

@@ -1,0 +1,47 @@
+---
+- name: "🔄 Actualizar índice de paquetes"
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  become: yes
+
+- name: "📦 Actualizar todos los paquetes"
+  apt:
+    upgrade: dist
+    autoremove: yes
+    autoclean: yes
+  become: yes
+
+- name: "🛠️ Instalar paquetes del sistema"
+  apt:
+    name:
+      - git
+      - curl
+      - wget
+      - build-essential
+      - python3
+      - python3-pip
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+      - lsb-release
+    state: present
+  become: yes
+
+- name: "👤 Crear usuario para la aplicación"
+  user:
+    name: "{{ app_user }}"
+    shell: /bin/bash
+    home: "/home/{{ app_user }}"
+    createhome: yes
+    state: present
+  become: yes
+
+- name: "📁 Crear directorio de la aplicación"
+  file:
+    path: "{{ app_directory }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+  become: yes

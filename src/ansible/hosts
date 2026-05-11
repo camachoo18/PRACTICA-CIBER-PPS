@@ -1,0 +1,6 @@
+[app_servers]
+debian13 ansible_host=10.5.1.38 ansible_user=admin ansible_ssh_pass=1234 ansible_become_pass=1234 ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+[app_servers:vars]
+ansible_connection=ssh
+ansible_python_interpreter=/usr/bin/python3

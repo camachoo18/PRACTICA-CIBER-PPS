@@ -1,0 +1,25 @@
+[Unit]
+Description=Practica Ciber PPS - Node.js Application
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+WorkingDirectory={{ app_directory }}
+ExecStart=/usr/bin/node src/server.js
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=practica-ciber-pps
+
+# Limitar recursos (opcional pero recomendado)
+MemoryLimit=1G
+CPUQuota=50%
+
+# Variables de entorno
+Environment="NODE_ENV=production"
+Environment="PORT={{ app_port }}"
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,35 @@
+---
+# ========================
+# Archivo de Variables Grup
+# ========================
+# Este archivo contiene variables para personalizar la instalación
+# Cópialos a los grupos correspondientes en el archivo hosts o úsalos con -e
+
+# Variables de la aplicación
+app_repo: "https://github.com/camachoo18/PRACTICA-CIBER-PPS.git"
+app_directory: "/opt/practica-ciber-pps"
+app_user: "app"
+app_port: 3000
+
+# Variables de Node.js
+nodejs_version: "20"
+npm_version: "latest"
+
+# Variables de sistema
+system_upgrade: true
+install_dev_tools: true
+
+# Variables de seguridad
+enable_firewall: true
+ssh_port: 22
+
+# Variables de logs
+log_directory: "/var/log/practica-ciber-pps"
+log_level: "info"
+
+# Variables de performance
+memory_limit: "1G"
+cpu_quota: "50%"
+
+# Timeout para esperar que la app esté lista
+app_startup_timeout: 60

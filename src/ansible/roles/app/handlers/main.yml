@@ -1,0 +1,5 @@
+---
+- name: restart practica-ciber-pps
+  systemd:
+    name: practica-ciber-pps
+    state: restarted

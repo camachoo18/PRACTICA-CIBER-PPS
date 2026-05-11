@@ -1,0 +1,37 @@
+---
+- name: "📥 Agregar repositorio NodeSource"
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
+  become: yes
+
+- name: "🔄 Actualizar índice de paquetes después de agregar NodeSource"
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: "🟢 Instalar Node.js y npm"
+  apt:
+    name:
+      - nodejs
+    state: present
+  become: yes
+
+- name: "✅ Verificar versión de Node.js"
+  shell: node --version
+  register: node_version
+
+- name: "✅ Verificar versión de npm"
+  shell: npm --version
+  register: npm_version
+
+- name: "📋 Mostrar versiones instaladas"
+  debug:
+    msg:
+      - "Node.js versión: {{ node_version.stdout }}"
+      - "npm versión: {{ npm_version.stdout }}"
+
+- name: "🔧 Actualizar npm globalmente"
+  shell: npm install -g npm@latest
+  become: yes

@@ -1,0 +1,98 @@
+---
+- name: "🧹 Limpiar directorio anterior si existe"
+  file:
+    path: "{{ app_directory }}"
+    state: absent
+  become: yes
+
+- name: "🔀 Clonar repositorio"
+  git:
+    repo: "{{ app_repo }}"
+    dest: "{{ app_directory }}"
+    version: main
+    force: yes
+  become: yes
+
+- name: "🔐 Cambiar permisos del directorio"
+  file:
+    path: "{{ app_directory }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+    recurse: yes
+  become: yes
+
+- name: "📦 Instalar dependencias del proyecto"
+  shell: |
+    cd {{ app_directory }}
+    npm install
+  become: yes
+  environment:
+    NODE_ENV: production
+
+- name: "🔨 Ejecutar setup.sh"
+  shell: |
+    cd {{ app_directory }}
+    bash ./setup.sh
+  become: yes
+
+- name: "📋 Verificar node_modules"
+  shell: |
+    ls -la {{ app_directory }}/node_modules | head -20
+  register: node_modules_check
+  become: yes
+
+- name: "✅ Mostrar verificación de node_modules"
+  debug:
+    msg: "{{ node_modules_check.stdout_lines }}"
+
+- name: "🐳 Crear servicio systemd para la aplicación"
+  template:
+    src: app.service.j2
+    dest: /etc/systemd/system/practica-ciber-pps.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart practica-ciber-pps
+  become: yes
+
+- name: "🔄 Recargar demonio de systemd"
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: "✅ Habilitar servicio"
+  systemd:
+    name: practica-ciber-pps
+    enabled: yes
+    state: started
+  become: yes
+
+- name: "⏳ Esperar a que la aplicación esté lista"
+  wait_for:
+    port: "{{ app_port }}"
+    delay: 5
+    timeout: 60
+  register: app_status
+  failed_when: false
+  become: yes
+
+- name: "🌐 Verificar que la aplicación está respondiendo"
+  uri:
+    url: "http://localhost:{{ app_port }}"
+    method: GET
+    status_code: 200
+  register: app_response
+  failed_when: false
+  retries: 5
+  delay: 5
+  become: yes
+
+- name: "📊 Mostrar estado de la aplicación"
+  debug:
+    msg:
+      - "✅ Aplicación iniciada correctamente"
+      - "🌐 URL: http://localhost:{{ app_port }}"
+      - "📁 Ruta: {{ app_directory }}"
+      - "👤 Usuario: {{ app_user }}"
